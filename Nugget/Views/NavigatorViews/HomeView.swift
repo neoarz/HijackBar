@@ -25,103 +25,110 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
+                // MARK: App Version
+                Section {
+                    
+                } header: {
+                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "beta \(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
+                }
+                .listStyle(InsetGroupedListStyle())
+                
                 // MARK: Tweak Options
                 Section {
                     VStack {
-                        // apply all tweaks button
                         HStack {
-                            Rectangle()
-                                .fill(Color.blue.opacity(0.1))
-                                .frame(width: 330, height: 48)
-                                .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
-                                .overlay {
-                                    HStack {
-                                        Image(systemName: "plus")
-                                            .foregroundStyle(.blue)
-                                        Button("Apply") {
-                                            applyChanges(reverting: false)
-                                        }
+                            // apply all tweaks button
+                            HStack {
+                                Button(action: {
+                                    applyChanges(reverting: false)
+                                }) {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "hammer.fill")
+                                        Text("Apply")
                                     }
                                 }
-                        }
-                        // remove all tweaks button
-                        HStack {
-                            Rectangle()
-                                .fill(Color.red.opacity(0.1))
-                                .frame(width: 330, height: 48)
                                 .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
-                                .overlay {
-                                    HStack {
-                                        Image(systemName: "xmark")
-                                            .foregroundStyle(.red)
-                                        Button("Remove") {
-                                            showRevertPage.toggle()
-                                        }
-                                        .foregroundStyle(.red)
+                                .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                            }
+                            // remove all tweaks button
+                            HStack {
+                                Button(action: {
+                                    showRevertPage.toggle()
+                                }) {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "trash.fill")
+                                        Text("Revert")
                                     }
                                 }
+                                .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                                .buttonStyle(TintedButton(color: .red, fullwidth: true))
+                                .sheet(isPresented: $showRevertPage, content: {
+                                    RevertTweaksPopoverView(revertFunction: applyChanges(reverting:))
+                                })
+                                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                            }
                         }
+                        .listStyle(InsetGroupedListStyle())
                         // select pairing file button
                         if !ApplyHandler.shared.trollstore {
-                                if pairingFile == nil {
+                            if pairingFile == nil {
                                 HStack {
-                                    Rectangle()
-                                        .fill(Color.green.opacity(0.1))
-                                        .frame(width: 330, height: 48)
-                                        .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
-                                        .overlay {
-                                            HStack {
-                                                Image(systemName: "document.fill")
-                                                    .foregroundStyle(.green)
-                                                Button("Select Pairing File") {
-                                                    showPairingFileImporter.toggle()
-                                                }
-                                                .foregroundStyle(.green)
-                                            }
+                                    Button(action: {
+                                        showPairingFileImporter.toggle()
+                                    }) {
+                                        HStack(spacing: 8) {
+                                            Image(systemName: "doc.fill")
+                                            Text("Select Pairing File")
                                         }
+                                    }
+                                    .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                                    .buttonStyle(TintedButton(color: .orange, fullwidth: true))
+                                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                                 }
                             } else {
-                                Button("Reset pairing file") {
+                                Button(action: {
                                     pairingFile = nil
+                                }) {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "doc.fill.badge.plus")
+                                        Text("Reset Pairing File")
+                                    }
                                 }
+                                .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
                                 .buttonStyle(TintedButton(color: .green, fullwidth: true))
                             }
                         }
                     }
-                    .padding(16)
-                    .listRowInsets(EdgeInsets())
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, -1)
                 } header: {
-                    Label("Tweak Options", systemImage: "wrench.and.screwdriver.fill")
+                    Label("Tweak Options", systemImage: "gearshape.fill")
+                        .padding(.leading, -4)
                 }
                 Section {
-                    // auto reboot option
-                    HStack {
-                        Toggle(isOn: $autoReboot) {
-                            HStack {
-                                Image(systemName: "power")
-                                Text("Reboot when Applied")
+                    VStack(spacing: 14) {
+                        // auto reboot option
+                        HStack {
+                            Toggle(isOn: $autoReboot) {
+                                Text("Reboot after apply")
                                     .minimumScaleFactor(0.5)
                             }
                         }
-                    }
-                    // skip setup
-                    Toggle(isOn: $skipSetup) {
-                        HStack {
+                        // skip setup
+                        Toggle(isOn: $skipSetup) {
                             HStack {
-                                Image(systemName: "restart.circle")
                                 Text("Traditional Skip Setup")
                                     .minimumScaleFactor(0.5)
                             }
                         }
                     }
-                }  header: {
-                    Label("Application Tools", systemImage: "plus.diamond.fill")
-                }  footer: {
-                    Text("If you use configuration profiles, it is recommended to turn off **Traditional Skip Setup**. This will not be applied if you are only applying SparseRestore-based tweaks.")
+                } header: {
+                    Label("Application Options", systemImage: "hammer.fill")
+                        .padding(.leading, -4)
+                } footer : {
+                    Text("**Traditional Skip Setup**: If you use configuration profiles, please turn this off.\n\nThis will not be applied if you are only using SparseRestore-Based tweaks.")
                 }
-                .listStyle(InsetGroupedListStyle())
-                .listRowInsets(EdgeInsets())
-                .padding()
                 .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!, UTType(filenameExtension: "mobiledevicepair", conformingTo: .data)!], onCompletion: { result in
                                 switch result {
                                 case .success(let url):
@@ -142,7 +149,7 @@ struct HomeView: View {
                             } message: {
                                 Text(lastError ?? "???")
                             }
-                
+
             }
             .onOpenURL(perform: { url in
                 // for opening the mobiledevicepairing file
@@ -165,7 +172,7 @@ struct HomeView: View {
                 }
                 startMinimuxer()
             }
-            .navigationTitle("Nugget Revamped")
+            .navigationTitle("Nugget")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
@@ -207,6 +214,57 @@ struct HomeView: View {
         } else {
             lastError = "minimuxer is not ready. Ensure you have WiFi and WireGuard VPN set up."
             showErrorAlert.toggle()
+        }
+    }
+    
+    struct LinkCell: View {
+        var imageName: String
+        var url: String
+        var title: String
+        var contribution: String
+        var systemImage: Bool = false
+        var circle: Bool = false
+        
+        var body: some View {
+            HStack(alignment: .center) {
+                Group {
+                    if systemImage {
+                        Image(systemName: imageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    } else {
+                        if imageName != "" {
+                            Image(imageName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }
+                }
+                .cornerRadius(circle ? .infinity : 0)
+                .frame(width: 24, height: 24)
+                
+                VStack {
+                    HStack {
+                        Button(action: {
+                            if url != "" {
+                                UIApplication.shared.open(URL(string: url)!)
+                            }
+                        }) {
+                            Text(title)
+                                .fontWeight(.bold)
+                        }
+                        .padding(.horizontal, 6)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(contribution)
+                            .padding(.horizontal, 6)
+                            .font(.footnote)
+                        Spacer()
+                    }
+                }
+            }
+            .foregroundColor(.blue)
         }
     }
     

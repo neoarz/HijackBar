@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct CreditsView: View {
+    private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+
     var body: some View {
         NavigationStack {
             List {
@@ -26,7 +28,7 @@ struct CreditsView: View {
                         Spacer()
                     }
                 } header: {
-                    Text("Version 1.0")
+                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "\(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
                 }
                 Section {
                     // app credits
@@ -96,4 +98,3 @@ struct LinkCell: View {
         .foregroundColor(.blue)
     }
 }
-
