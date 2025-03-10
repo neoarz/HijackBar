@@ -99,6 +99,3 @@ struct LinkCell: View {
     }
 }
 
-#Preview {
-    CreditsView()
-}
