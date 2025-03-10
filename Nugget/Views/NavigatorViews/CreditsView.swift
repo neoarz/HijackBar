@@ -98,3 +98,7 @@ struct LinkCell: View {
         .foregroundColor(.blue)
     }
 }
+
+#Preview {
+    CreditsView()
+}
