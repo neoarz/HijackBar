@@ -294,3 +294,7 @@ struct HomeView: View {
         return body(cStrings)
     }
 }
+
+#Preview {
+    HomeView()
+}
