@@ -21,8 +21,6 @@ struct SpringboardTweaksView: View {
                 }) {
                     ForEach(group.tweaks) { tweak in
                         if tweak.tweakType == .text {
-                            Text(tweak.title)
-                                .bold()
                             TextField(tweak.placeholder, text: $manager.tweakGroups[manager.tweakGroups.firstIndex(where: { $0.id == group.id })!].tweaks[group.tweaks.firstIndex(where: { $0.id == tweak.id })!].stringValue)
                                 .onChange(of: tweak.stringValue) { newValue in
                                     do {

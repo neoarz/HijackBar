@@ -36,30 +36,39 @@ struct TweakGroup: Identifiable {
 class BasicPlistTweaksManager: ObservableObject {
     static var managers: [BasicPlistTweaksManager] = [
         .init(page: .SpringBoard, tweakGroups: [
-            TweakGroup(name: "Test", icon: "house", tweaks: [
+            TweakGroup(name: "Lock Screen Footnote", icon: "character.cursor.ibeam", tweaks: [
                 PlistTweak(key: "LockScreenFootnote", title: "Lock Screen Footnote Text", fileLocation: .footnote, tweakType: .text, placeholder: "Footnote Text"),
+            ]),
+            TweakGroup(name: "Locking & Lock Screen", icon: "lock.fill", tweaks: [
                 PlistTweak(key: "SBDontLockAfterCrash", title: "Disable Lock After Respring", fileLocation: .springboard, tweakType: .toggle),
                 PlistTweak(key: "SBDontDimOrLockOnAC", title: "Disable Screen Dimming While Charging", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBHideLowPowerAlerts", title: "Disable Low Battery Alerts", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBNeverBreadcrumb", title: "Disable Breadcrumb", fileLocation: .springboard, tweakType: .toggle),
                 PlistTweak(key: "SBShowSupervisionTextOnLockScreen", title: "Show Supervision Text on Lock Screen", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBCoverSheetPrelaunchCameraOnSwipe", title: "Disable Camera Prelaunch", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBSupressAppShortcutTruncation", title: "Suppress App Shortcut Truncation", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBSuppressNoSimAlert", title: "Suppress No SIM Alert", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBShowStatusBarOverridesForRecording", title: "Enable Status Bar Demo", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBDisableProximity", title: "Disable Proximity UI features", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "CCSPresentationGesture", title: "Disable CC Presentation Gesture", fileLocation: .springboard, tweakType: .toggle, invertValue: true),
-                PlistTweak(key: "SBExtendedDisplayOverrideSupportForAirPlayAndDontFileRadars", title: "Enable AirPlay support for Stage Manager", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "DiscoverableMode", title: "Permanently Allow Receiving AirDrop from Everyone", fileLocation: .airdrop, tweakType: .toggle)
+                PlistTweak(key: "SBCoverSheetPrelaunchCameraOnSwipe", title: "Disable Camera Prelaunch while swiping", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBDisableNotificationCenterBlur", title: "Disable Notification Center Blur", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBDisableAutoDim", title: "Disable Dimming before Locking", fileLocation: .springboard, tweakType: .toggle),
             ]),
-            TweakGroup(name: "Test2", icon: "house", tweaks: [
+            TweakGroup(name: "Status Bar & Control Center", icon: "platter.filled.top.and.arrow.up.iphone", tweaks: [
+                PlistTweak(key: "SBNeverBreadcrumb", title: "Disable Breadcrumb", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBExtendedDisplayOverrideSupportForAirPlayAndDontFileRadars", title: "Enable AirPlay support for Stage Manager", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "CCSPresentationGesture", title: "Disable CC Presentation Gesture", fileLocation: .springboard, tweakType: .toggle, invertValue: true),
+            ]),
+            TweakGroup(name: "Alerts", icon: "bell.fill", tweaks: [
+                PlistTweak(key: "SBSuppressNoSimAlert", title: "Suppress No SIM Alert", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBHideLowPowerAlerts", title: "Disable Low Battery Alerts", fileLocation: .springboard, tweakType: .toggle),
+            ]),
+            TweakGroup(name: "Miscellaneous", icon: "plus.circle.fill", tweaks: [
+                PlistTweak(key: "SBSupressAppShortcutTruncation", title: "Suppress App Shortcut Truncation", fileLocation: .springboard, tweakType: .toggle),
                 PlistTweak(key: "SBShowStatusBarOverridesForRecording", title: "Enable Status Bar Demo", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBDisableProximity", title: "Disable Proximity Sensor", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBPlaySoundOnDeviceWake", title: "Play Sound on Device Wake", fileLocation: .springboard, tweakType: .toggle),
+            ]),
+            TweakGroup(name: "Danger Zone", icon: "exclamationmark.triangle.fill", tweaks: [
+                PlistTweak(key: "SBDontLockEver", title: "Disable Locking PERMANENTLY", fileLocation: .springboard, tweakType: .toggle),
+                PlistTweak(key: "SBShowStatusBarOverridesForRecording", title: "Enable Status Bar Demo (WARNING: Status Bar Data will be fully inaccurate.)", fileLocation: .springboard, tweakType: .toggle),
             ])
         ]),
         .init(page: .Internal, tweakGroups: [
-            TweakGroup(name: "SpringBoard", icon: "house", tweaks: [
-                .init(key: "UIStatusBarShowBuildVersion", title: "Show Build Version in Status Bar", fileLocation: .globalPreferences, tweakType: .toggle),
-                .init(key: "NSForceRightToLeftWritingDirection", title: "Force Right-to-Left Layout", fileLocation: .globalPreferences, tweakType: .toggle),
+            TweakGroup(name: "Debugging", icon: "ant.fill", tweaks: [
                 .init(key: "MetalForceHudEnabled", title: "Enable Metal HUD Debug", fileLocation: .globalPreferences, tweakType: .toggle),
                 .init(key: "AccessoryDeveloperEnabled", title: "Enable Accessory Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
                 .init(key: "iMessageDiagnosticsEnabled", title: "Enable iMessage Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
@@ -68,14 +77,17 @@ class BasicPlistTweaksManager: ObservableObject {
                 .init(key: "debugGestureEnabled", title: "Enable App Store Debug Gesture", fileLocation: .appStore, tweakType: .toggle),
                 .init(key: "DebugModeEnabled", title: "Enable Notes App Debug Mode", fileLocation: .notes, tweakType: .toggle),
                 .init(key: "BKDigitizerVisualizeTouches", title: "Show Touches With Debug Info", fileLocation: .backboardd, tweakType: .toggle),
-                .init(key: "BKHideAppleLogoOnLaunch", title: "Hide Respring Icon", fileLocation: .backboardd, tweakType: .toggle),
-                .init(key: "EnableWakeGestureHaptic", title: "Vibrate on Raise-to-Wake", fileLocation: .coreMotion, tweakType: .toggle),
+            ]),
+            TweakGroup(name: "Clipboard", icon: "list.clipboard.fill", tweaks: [
                 .init(key: "PlaySoundOnPaste", title: "Play Sound on Paste", fileLocation: .pasteboard, tweakType: .toggle),
                 .init(key: "AnnounceAllPastes", title: "Show Notifications for System Pastes", fileLocation: .pasteboard, tweakType: .toggle)
             ]),
-            TweakGroup(name: "Photos", icon: "photo", tweaks: [
-                .init(key: "VCDiagnosticsEnabled", title: "Enable FaceTime Debugging", fileLocation: .globalPreferences, tweakType: .toggle),
-            ])
+            TweakGroup(name: "Miscellaneous", icon: "plus.circle.fill", tweaks: [
+                .init(key: "UIStatusBarShowBuildVersion", title: "Show Build Version in Status Bar", fileLocation: .globalPreferences, tweakType: .toggle),
+                .init(key: "NSForceRightToLeftWritingDirection", title: "Force Right-to-Left Layout", fileLocation: .globalPreferences, tweakType: .toggle),
+                .init(key: "BKHideAppleLogoOnLaunch", title: "Hide Respring Icon", fileLocation: .backboardd, tweakType: .toggle),
+                .init(key: "EnableWakeGestureHaptic", title: "Vibrate on Raise-to-Wake", fileLocation: .coreMotion, tweakType: .toggle),
+            ]),
         ])
     ]
     
