@@ -21,7 +21,8 @@ struct ModifyTweakViewModifier: ViewModifier {
                 }) {
                     HStack {
                         Text("Modify")
-                        Image(systemName: applyHandler.isTweakEnabled(pageKey) ? "checkmark.seal" : "xmark.seal")
+                            .foregroundStyle(Color(applyHandler.isTweakEnabled(pageKey) ? .green : .red))
+                        Image(systemName: applyHandler.isTweakEnabled(pageKey) ? "checkmark.circle" : "x.circle")
                             .foregroundStyle(Color(applyHandler.isTweakEnabled(pageKey) ? .green : .red))
                     }
                 }

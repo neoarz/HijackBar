@@ -25,14 +25,6 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
-                // MARK: App Version
-                Section {
-                    
-                } header: {
-                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "beta \(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
-                }
-                .listStyle(InsetGroupedListStyle())
-                
                 // MARK: Tweak Options
                 Section {
                     VStack {
@@ -172,7 +164,7 @@ struct HomeView: View {
                 }
                 startMinimuxer()
             }
-            .navigationTitle("Nugget")
+            .navigationTitle("Nugget Revamped")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)

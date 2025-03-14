@@ -58,7 +58,6 @@ class BasicPlistTweaksManager: ObservableObject {
             ]),
             TweakGroup(name: "Miscellaneous", icon: "plus.circle.fill", tweaks: [
                 PlistTweak(key: "SBSupressAppShortcutTruncation", title: "Suppress App Shortcut Truncation", fileLocation: .springboard, tweakType: .toggle),
-                PlistTweak(key: "SBShowStatusBarOverridesForRecording", title: "Enable Status Bar Demo", fileLocation: .springboard, tweakType: .toggle),
                 PlistTweak(key: "SBDisableProximity", title: "Disable Proximity Sensor", fileLocation: .springboard, tweakType: .toggle),
                 PlistTweak(key: "SBPlaySoundOnDeviceWake", title: "Play Sound on Device Wake", fileLocation: .springboard, tweakType: .toggle),
             ]),

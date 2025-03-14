@@ -43,7 +43,7 @@ struct SpringboardTweaksView: View {
                 }
             }
         }
-        .navigationTitle("Springboard Tweaks")
+        .navigationTitle("SpringBoard Tweaks")
         .tweakToggle(for: .SpringBoard)
     }
 }

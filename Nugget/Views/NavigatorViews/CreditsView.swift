@@ -18,9 +18,9 @@ struct CreditsView: View {
                         Spacer()
                         VStack {
                             Text("Nugget Revamped")
-                                .font(.system(size: 35, weight: .bold))
+                                .font(.system(size: 32, weight: .bold))
                                 .lineLimit(1)
-                            Text("Originally built by **leminlimez**, improved\nby **lunginspector**")
+                            Text("Originally built by **leminlimez**, improved\nby **lunginspector**, made for **jailbreak.party.**")
                                 .font(.system(size: 15, weight: .regular))
                                 .multilineTextAlignment(.center)
                                 .lineLimit(2)
@@ -29,6 +29,9 @@ struct CreditsView: View {
                     }
                 } header: {
                     Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "\(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
+                }
+                Section {
+                    LinkCell(imageName: "jailbreak.party", url: "https://discord.gg/XPj66zZ4gT", title: "Join the jailbreak.party Discord!", contribution: NSLocalizedString("For support and jailbreak.party news.", comment: "leminlimez's contribution"), circle: true)
                 }
                 Section {
                     // app credits
