@@ -95,22 +95,9 @@ struct StatusBarView: View {
     var body: some View {
         List {
             Section {
-                HStack {
-                    Image(systemName: "info.circle.fill")
-                        .padding(.trailing, 6)
-                        .font(.system(size: 25, weight: .regular, design: .default))
-                        .foregroundStyle(.blue)
-                    Text("**Notice:** To use this option, make sure Skip Setup is enabled.")
-                }
-                .padding(.top, 5)
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .padding(.trailing, 6)
-                        .font(.system(size: 25, weight: .regular, design: .default))
-                        .foregroundStyle(.yellow)
-                    Text("**Warning:** Beta versions of iOS, use with caution. Have a backup ready.")
-                }
-                .padding(.bottom, 5)
+                
+            } footer: {
+                Text("Betas, use with caution. Have a backup.")
             }
             Section {
                 Picker(selection: $radioPrimarySelection, label: Text("Visibility")) {
@@ -161,7 +148,7 @@ struct StatusBarView: View {
                 //                                })
                 //                            }
                 
-                Toggle("Carrier Name", isOn: $carrierTextEnabled).onChange(of: carrierTextEnabled, perform: { nv in
+                Toggle("Change Primary Carrier Text", isOn: $carrierTextEnabled).onChange(of: carrierTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setCarrier(carrierText)
                     } else {
@@ -185,7 +172,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     carrierText = StatusManager.sharedInstance().getCarrierOverride()
                 })
-                Toggle("Carrier Badge Text", isOn: $primaryServiceBadgeTextEnabled).onChange(of: primaryServiceBadgeTextEnabled, perform: { nv in
+                Toggle("Change Primary Service Badge Text", isOn: $primaryServiceBadgeTextEnabled).onChange(of: primaryServiceBadgeTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setPrimaryServiceBadge(primaryServiceBadgeText)
                     } else {
@@ -194,7 +181,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     primaryServiceBadgeTextEnabled = StatusManager.sharedInstance().isPrimaryServiceBadgeOverridden()
                 })
-                TextField("Primary Carrier Badge Text", text: $primaryServiceBadgeText).onChange(of: primaryServiceBadgeText, perform: { nv in
+                TextField("Primary Service Badge Text", text: $primaryServiceBadgeText).onChange(of: primaryServiceBadgeText, perform: { nv in
                     // This is important.
                     // Make sure the UTF-8 representation of the string does not exceed 100
                     // Otherwise the struct will overflow
@@ -210,7 +197,7 @@ struct StatusBarView: View {
                     primaryServiceBadgeText = StatusManager.sharedInstance().getPrimaryServiceBadgeOverride()
                 })
                 
-                Toggle("Network Indicator Type", isOn: $dataNetworkTypeEnabled).onChange(of: dataNetworkTypeEnabled, perform: { nv in
+                Toggle("Change Data Network Type", isOn: $dataNetworkTypeEnabled).onChange(of: dataNetworkTypeEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setDataNetworkType(Int32(dataNetworkType))
                     } else {
@@ -220,7 +207,7 @@ struct StatusBarView: View {
                     dataNetworkTypeEnabled = StatusManager.sharedInstance().isDataNetworkTypeOverridden()
                 })
                 HStack {
-                    Text("Indicator Options")
+                    Text("Data Network Type")
                     Spacer()
                     
                     Menu {
@@ -243,7 +230,7 @@ struct StatusBarView: View {
                     dataNetworkType = Int(StatusManager.sharedInstance().getDataNetworkTypeOverride())
                 })
             } header: {
-                Label("Primary Carrier", systemImage: "1.square.fill")
+                Text("Primary Carrier")
             }
             
             Section {
@@ -295,7 +282,7 @@ struct StatusBarView: View {
                 //                                })
                 //                            }
                 
-                Toggle("Carrier Name", isOn: $secondaryCarrierTextEnabled).onChange(of: secondaryCarrierTextEnabled, perform: { nv in
+                Toggle("Change Secondary Carrier Text", isOn: $secondaryCarrierTextEnabled).onChange(of: secondaryCarrierTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryCarrier(secondaryCarrierText)
                     } else {
@@ -319,7 +306,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     secondaryCarrierText = StatusManager.sharedInstance().getSecondaryCarrierOverride()
                 })
-                Toggle("Carrier Badge Name", isOn: $secondaryServiceBadgeTextEnabled).onChange(of: secondaryServiceBadgeTextEnabled, perform: { nv in
+                Toggle("Change Secondary Service Badge Text", isOn: $secondaryServiceBadgeTextEnabled).onChange(of: secondaryServiceBadgeTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryServiceBadge(secondaryServiceBadgeText)
                     } else {
@@ -328,7 +315,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     secondaryServiceBadgeTextEnabled = StatusManager.sharedInstance().isSecondaryServiceBadgeOverridden()
                 })
-                TextField("Secondary Carrier Badge Text", text: $secondaryServiceBadgeText).onChange(of: secondaryServiceBadgeText, perform: { nv in
+                TextField("Secondary Service Badge Text", text: $secondaryServiceBadgeText).onChange(of: secondaryServiceBadgeText, perform: { nv in
                     // This is important.
                     // Make sure the UTF-8 representation of the string does not exceed 100
                     // Otherwise the struct will overflow
@@ -344,7 +331,7 @@ struct StatusBarView: View {
                     secondaryServiceBadgeText = StatusManager.sharedInstance().getSecondaryServiceBadgeOverride()
                 })
                 
-                Toggle("Network Indicator Type", isOn: $secondaryDataNetworkTypeEnabled).onChange(of: secondaryDataNetworkTypeEnabled, perform: { nv in
+                Toggle("Change Secondary Data Network Type", isOn: $secondaryDataNetworkTypeEnabled).onChange(of: secondaryDataNetworkTypeEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryDataNetworkType(Int32(secondaryDataNetworkType))
                     } else {
@@ -355,7 +342,7 @@ struct StatusBarView: View {
                 })
                 
                 HStack {
-                    Text("Indicator Type (Secondary)")
+                    Text("Secondary Data Network Type")
                     Spacer()
                     
                     Menu {
@@ -378,12 +365,10 @@ struct StatusBarView: View {
                     secondaryDataNetworkType = Int(StatusManager.sharedInstance().getSecondaryDataNetworkTypeOverride())
                 })
             } header: {
-                Label("Secondary Carrier", systemImage: "2.square.fill")
-            } footer: {
-                Text("If you change the indicator option on the **secondary carrier**, you will not see the change anywhere other than in the control center.")
+                Text("Secondary Carrier")
             }
             Section {
-                Toggle("Breadcrumb Text", isOn: $crumbTextEnabled).onChange(of: crumbTextEnabled, perform: { nv in
+                Toggle("Change Breadcrumb Text", isOn: $crumbTextEnabled).onChange(of: crumbTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setCrumb(crumbText)
                     } else {
@@ -407,7 +392,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     crumbText = StatusManager.sharedInstance().getCrumbOverride()
                 })
-                Toggle("Battery Detail Text", isOn: $batteryDetailEnabled).onChange(of: batteryDetailEnabled, perform: { nv in
+                Toggle("Change Battery Detail Text", isOn: $batteryDetailEnabled).onChange(of: batteryDetailEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setBatteryDetail(batteryDetailText)
                     } else {
@@ -432,7 +417,7 @@ struct StatusBarView: View {
                     batteryDetailText = StatusManager.sharedInstance().getBatteryDetailOverride()
                 })
                 if UIDevice.current.userInterfaceIdiom == .pad {
-                    Toggle("Status Bar Date Text", isOn: $dateTextEnabled).onChange(of: dateTextEnabled, perform: { nv in
+                    Toggle("Change Status Bar Date Text", isOn: $dateTextEnabled).onChange(of: dateTextEnabled, perform: { nv in
                         if nv {
                             StatusManager.sharedInstance().setDate(dateText)
                         } else {
@@ -457,7 +442,7 @@ struct StatusBarView: View {
                         dateText = StatusManager.sharedInstance().getDateOverride()
                     })
                 }
-                Toggle("Status Bar Time Text", isOn: $timeTextEnabled).onChange(of: timeTextEnabled, perform: { nv in
+                Toggle("Change Status Bar Time Text", isOn: $timeTextEnabled).onChange(of: timeTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setTime(timeText)
                     } else {
@@ -481,14 +466,12 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     timeText = StatusManager.sharedInstance().getTimeOverride()
                 })
-            } header: {
-                Label("Clock Area & Battery Detail", systemImage: "clock.fill")
-            }  footer: {
-                Text("When using **Status Bar Time Text**, if you leave the time blank, it will show the carrier name on devices with a notch or the dynamic island.")
+            } footer: {
+                Text("When set to blank on notched devices, this will display the carrier name.")
             }
             
             Section {
-                Toggle("Battery Icon Capacity", isOn: $batteryCapacityEnabled).onChange(of: batteryCapacityEnabled, perform: { nv in
+                Toggle("Change Battery Icon Capacity", isOn: $batteryCapacityEnabled).onChange(of: batteryCapacityEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setBatteryCapacity(Int32(batteryCapacity))
                     } else {
@@ -511,7 +494,7 @@ struct StatusBarView: View {
                         })
                 }
                 
-                Toggle("Wi-Fi Signal Strength Bars", isOn: $wiFiStrengthBarsEnabled).onChange(of: wiFiStrengthBarsEnabled, perform: { nv in
+                Toggle("Change Wi-Fi Signal Strength Bars", isOn: $wiFiStrengthBarsEnabled).onChange(of: wiFiStrengthBarsEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setWiFiSignalStrengthBars(Int32(wiFiStrengthBars))
                     } else {
@@ -534,7 +517,7 @@ struct StatusBarView: View {
                         })
                 }
                 
-                Toggle("Primary Signal Strength Bars", isOn: $gsmStrengthBarsEnabled).onChange(of: gsmStrengthBarsEnabled, perform: { nv in
+                Toggle("Change Primary GSM Signal Strength Bars", isOn: $gsmStrengthBarsEnabled).onChange(of: gsmStrengthBarsEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setGsmSignalStrengthBars(Int32(gsmStrengthBars))
                     } else {
@@ -557,7 +540,7 @@ struct StatusBarView: View {
                         })
                 }
                 
-                Toggle("Secondary Signal Strength Bars", isOn: $secondaryGsmStrengthBarsEnabled).onChange(of: secondaryGsmStrengthBarsEnabled, perform: { nv in
+                Toggle("Change Secondary GSM Signal Strength Bars", isOn: $secondaryGsmStrengthBarsEnabled).onChange(of: secondaryGsmStrengthBarsEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryGsmSignalStrengthBars(Int32(secondaryGsmStrengthBars))
                     } else {
@@ -579,26 +562,27 @@ struct StatusBarView: View {
                             secondaryGsmStrengthBars = Double(StatusManager.sharedInstance().getSecondaryGsmSignalStrengthBarsOverride())
                         })
                 }
-            }  header: {
-                Label("Signal Strenth & Battery Percentage", systemImage: "antenna.radiowaves.left.and.right")
             }
             
             Section {
-                Toggle("Numeric Wi-Fi Strength", isOn: $displayingRawWiFiStrength).onChange(of: displayingRawWiFiStrength, perform: { nv in
+                Toggle("Show Numeric Wi-Fi Strength", isOn: $displayingRawWiFiStrength).onChange(of: displayingRawWiFiStrength, perform: { nv in
                     StatusManager.sharedInstance().displayRawWifiSignal(nv)
                 }).onAppear(perform: {
                     displayingRawWiFiStrength = StatusManager.sharedInstance().isDisplayingRawWiFiSignal()
                 })
-                Toggle("Numeric Cellular Strength", isOn: $displayingRawGSMStrength).onChange(of: displayingRawGSMStrength, perform: { nv in
+                Toggle("Show Numeric Cellular Strength", isOn: $displayingRawGSMStrength).onChange(of: displayingRawGSMStrength, perform: { nv in
                     StatusManager.sharedInstance().displayRawGSMSignal(nv)
                 }).onAppear(perform: {
                     displayingRawGSMStrength = StatusManager.sharedInstance().isDisplayingRawGSMSignal()
                 })
-            } header: {
-                Label("Numeric Strength", systemImage: "number")
             }
             
             Section {
+                Toggle("Hide Focus (i.e. Do Not Disturb)", isOn: $DNDHidden).onChange(of: DNDHidden, perform: { nv in
+                    StatusManager.sharedInstance().hideDND(nv)
+                }).onAppear(perform: {
+                    DNDHidden = StatusManager.sharedInstance().isDNDHidden()
+                })
                 Toggle("Hide Airplane Mode", isOn: $airplaneHidden).onChange(of: airplaneHidden, perform: { nv in
                     StatusManager.sharedInstance().hideAirplane(nv)
                 }).onAppear(perform: {
@@ -609,6 +593,8 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     cellHidden = StatusManager.sharedInstance().isCellHidden()
                 })
+            }
+            Section {
                 Toggle("Hide Wi-Fi^", isOn: $wiFiHidden).onChange(of: wiFiHidden, perform: { nv in
                     StatusManager.sharedInstance().hideWiFi(nv)
                 }).onAppear(perform: {
@@ -656,14 +642,11 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     VPNHidden = StatusManager.sharedInstance().isVPNHidden()
                 })
-            } header: {
-                Label("Indicators", systemImage: "list.bullet.rectangle")
             } footer: {
-                Text("* - Will also hide carrier name\n^ - Will also hide cellular data indicator")
+                Text("*Will also hide carrier name\n^Will also hide cellular data indicator")
             }
         }
         .tweakToggle(for: .StatusBar)
         .navigationTitle("Status Bar")
     }
 }
-
