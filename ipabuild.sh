@@ -1,75 +1,79 @@
-#!/bin/bash
-
+if [[ $* == *--scriptdebug* ]]; then
+    set -x
+fi
 set -e
 
-cd "$(dirname "$0")"
-
-APPLICATION_NAME=Nugget
-
-echo "[*] $APPLICATION_NAME Build Script"
-
-rm -rf build
-
-if ls *.ipa 1> /dev/null 2>&1; then
-    rm -rf *.ipa
+APP_NAME="Nugget"
+FILE_EXT="ipa"
+WORKING_LOCATION="$(pwd)"
+APP_BUILD_FILES="$WORKING_LOCATION/layout/Applications/$APP_NAME.app"
+DEBUG_LOCATION="$WORKING_LOCATION/.theos/obj/debug"
+RELEASE_LOCATION="$WORKING_LOCATION/.theos/obj"
+if [[ $* == *--debug* ]]; then
+    BUILD_LOCATION="$DEBUG_LOCATION/$APP_NAME.app"
+else
+    BUILD_LOCATION="$RELEASE_LOCATION/$APP_NAME.app"
 fi
 
-WORKING_LOCATION="$(pwd)"
+if [[ $* == *--clean* ]]; then
+    echo "[*] Cleaning..."
+    rm -rf build
+    make clean
+fi
 
 if [ ! -d "build" ]; then
     mkdir build
 fi
+#remove existing archive if there
+if [ -d "build/$APP_NAME.$FILE_EXT" ]; then
+    rm -rf "build/$APP_NAME.$FILE_EXT"
+fi
 
-cd build
-
-echo "[*] Building..."
-if [[ $* == *--debug* ]]; then
-xcodebuild -project "$WORKING_LOCATION/$APPLICATION_NAME.xcodeproj" \
-    -scheme "$APPLICATION_NAME" \
-    -configuration Debug \
-    -derivedDataPath "$WORKING_LOCATION/build/DerivedDataApp" \
-    -destination 'generic/platform=iOS' \
-    clean build \
-    CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
-
-DD_APP_PATH="$WORKING_LOCATION/build/DerivedDataApp/Build/Products/Debug-iphoneos/$APPLICATION_NAME.app"
-TARGET_APP="$WORKING_LOCATION/build/$APPLICATION_NAME.app"
-cp -r "$DD_APP_PATH" "$TARGET_APP"
+if ! type "gmake" >/dev/null; then
+    echo "[!] gmake not found, using macOS bundled make instead"
+    make clean
+    if [[ $* == *--debug* ]]; then
+        make
+    else
+        make FINALPACKAGE=1
+    fi
 else
-xcodebuild -project "$WORKING_LOCATION/$APPLICATION_NAME.xcodeproj" \
-    -scheme "$APPLICATION_NAME" \
-    -configuration Release \
-    -derivedDataPath "$WORKING_LOCATION/build/DerivedDataApp" \
-    -destination 'generic/platform=iOS' \
-    clean build \
-    CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
-
-DD_APP_PATH="$WORKING_LOCATION/build/DerivedDataApp/Build/Products/Release-iphoneos/$APPLICATION_NAME.app"
-TARGET_APP="$WORKING_LOCATION/build/$APPLICATION_NAME.app"
-cp -r "$DD_APP_PATH" "$TARGET_APP"
+    gmake clean
+    if [[ $* == *--debug* ]]; then
+        gmake -j"$(sysctl -n machdep.cpu.thread_count)"
+    else
+        gmake -j"$(sysctl -n machdep.cpu.thread_count)" FINALPACKAGE=1
+    fi
 fi
 
-echo "[*] Stripping signature..."
-codesign --remove "$TARGET_APP"
-if [ -e "$TARGET_APP/_CodeSignature" ]; then
-    rm -rf "$TARGET_APP/_CodeSignature"
-fi
-if [ -e "$TARGET_APP/embedded.mobileprovision" ]; then
-    rm -rf "$TARGET_APP/embedded.mobileprovision"
-fi
+if [ -d $BUILD_LOCATION ]; then
+    # Add the necessary files
+    echo "Adding application files"
+    cp -r $APP_BUILD_FILES/*.png $BUILD_LOCATION
+    cp -r $APP_BUILD_FILES/*.plist $BUILD_LOCATION
+    cp -r "$APP_BUILD_FILES/Assets.car" "$BUILD_LOCATION/Assets.car"
+    
+    # Add the frameworks
+    echo "Adding framework files"
+    mkdir -p $BUILD_LOCATION/Frameworks
+    if [[ $* == *--debug* ]]; then
+        cp -r $DEBUG_LOCATION/*.dylib "$BUILD_LOCATION/Frameworks"
+    else
+        cp -r $RELEASE_LOCATION/*.dylib "$BUILD_LOCATION/Frameworks"
+    fi
 
-echo "[*] Packaging..."
-mkdir Payload
-cp -r $APPLICATION_NAME.app Payload/$APPLICATION_NAME.app
-zip -vr $APPLICATION_NAME.ipa Payload
+    # Create payload
+    echo "Creating payload"
+    cd build
+    mkdir Payload
+    cp -r $BUILD_LOCATION Payload/$APP_NAME.app
 
-echo "[*] All done, cleaning up..."
-rm -rf Payload
-
-cd ..
-if [[ $* == *--debug* ]]; then
-mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" ./$APPLICATION_NAME.debug.ipa
-else
-mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" .
+    # Archive
+    echo "Archiving"
+    if [[ $* != *--debug* ]]; then
+        strip Payload/$APP_NAME.app/$APP_NAME
+    fi
+    zip -vr $APP_NAME.$FILE_EXT Payload
+    rm -rf $APP_NAME.app
+    rm -rf Payload
 fi
-rm -rf "$WORKING_LOCATION/build/"
