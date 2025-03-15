@@ -92,7 +92,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.vertical, 3)
+                    .padding(.vertical, 5)
                     .padding(.horizontal, -1)
                 } header: {
                     Label("Tweak Options", systemImage: "gearshape.fill")
@@ -102,6 +102,7 @@ struct HomeView: View {
                     VStack(spacing: 14) {
                         // auto reboot option
                         HStack {
+                            Image(systemName: "power")
                             Toggle(isOn: $autoReboot) {
                                 Text("Reboot after apply")
                                     .minimumScaleFactor(0.5)
@@ -110,6 +111,7 @@ struct HomeView: View {
                         // skip setup
                         Toggle(isOn: $skipSetup) {
                             HStack {
+                                Image(systemName: "restart.circle.fill")
                                 Text("Traditional Skip Setup")
                                     .minimumScaleFactor(0.5)
                             }
@@ -119,7 +121,7 @@ struct HomeView: View {
                     Label("Application Options", systemImage: "hammer.fill")
                         .padding(.leading, -4)
                 } footer : {
-                    Text("**Traditional Skip Setup**: If you use configuration profiles, please turn this off.\n\nThis will not be applied if you are only using SparseRestore-Based tweaks.")
+                    Text("**Traditional Skip Setup**: If you use configuration profiles, please turn this off.\n\nSkip Setup will only be applied when restoring **Status Bar** Tweaks.")
                 }
                 .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!, UTType(filenameExtension: "mobiledevicepair", conformingTo: .data)!], onCompletion: { result in
                                 switch result {

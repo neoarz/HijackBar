@@ -95,12 +95,16 @@ struct StatusBarView: View {
     var body: some View {
         List {
             Section {
-                
-            } footer: {
-                Text("Betas, use with caution. Have a backup.")
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.system(size: 25))
+                        .padding(.trailing, 8)
+                    Text("If you are using a beta version of iOS, use caution and have a backup.")
+                }
             }
             Section {
-                Picker(selection: $radioPrimarySelection, label: Text("Visibility")) {
+                Picker(selection: $radioPrimarySelection, label: Text("Network Visibility")) {
                     Text("Default").tag(1)
                     Text("Force Show").tag(2)
                     Text("Force Hide").tag(3)
@@ -148,7 +152,7 @@ struct StatusBarView: View {
                 //                                })
                 //                            }
                 
-                Toggle("Change Primary Carrier Text", isOn: $carrierTextEnabled).onChange(of: carrierTextEnabled, perform: { nv in
+                Toggle("Change Carrier Text", isOn: $carrierTextEnabled).onChange(of: carrierTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setCarrier(carrierText)
                     } else {
@@ -172,7 +176,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     carrierText = StatusManager.sharedInstance().getCarrierOverride()
                 })
-                Toggle("Change Primary Service Badge Text", isOn: $primaryServiceBadgeTextEnabled).onChange(of: primaryServiceBadgeTextEnabled, perform: { nv in
+                Toggle("Change Service Badge Text", isOn: $primaryServiceBadgeTextEnabled).onChange(of: primaryServiceBadgeTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setPrimaryServiceBadge(primaryServiceBadgeText)
                     } else {
@@ -230,11 +234,14 @@ struct StatusBarView: View {
                     dataNetworkType = Int(StatusManager.sharedInstance().getDataNetworkTypeOverride())
                 })
             } header: {
-                Text("Primary Carrier")
+                HStack {
+                    Image(systemName: "1.square.fill")
+                    Text("Primary Carrier")
+                }
             }
             
             Section {
-                Picker(selection: $radioSecondarySelection, label: Text("Visibility")) {
+                Picker(selection: $radioSecondarySelection, label: Text("Network Visibility")) {
                     Text("Default").tag(1)
                     Text("Force Show").tag(2)
                     Text("Force Hide").tag(3)
@@ -282,7 +289,7 @@ struct StatusBarView: View {
                 //                                })
                 //                            }
                 
-                Toggle("Change Secondary Carrier Text", isOn: $secondaryCarrierTextEnabled).onChange(of: secondaryCarrierTextEnabled, perform: { nv in
+                Toggle("Change Carrier Text", isOn: $secondaryCarrierTextEnabled).onChange(of: secondaryCarrierTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryCarrier(secondaryCarrierText)
                     } else {
@@ -306,7 +313,7 @@ struct StatusBarView: View {
                 }).onAppear(perform: {
                     secondaryCarrierText = StatusManager.sharedInstance().getSecondaryCarrierOverride()
                 })
-                Toggle("Change Secondary Service Badge Text", isOn: $secondaryServiceBadgeTextEnabled).onChange(of: secondaryServiceBadgeTextEnabled, perform: { nv in
+                Toggle("Change Service Badge Text", isOn: $secondaryServiceBadgeTextEnabled).onChange(of: secondaryServiceBadgeTextEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryServiceBadge(secondaryServiceBadgeText)
                     } else {
@@ -331,7 +338,7 @@ struct StatusBarView: View {
                     secondaryServiceBadgeText = StatusManager.sharedInstance().getSecondaryServiceBadgeOverride()
                 })
                 
-                Toggle("Change Secondary Data Network Type", isOn: $secondaryDataNetworkTypeEnabled).onChange(of: secondaryDataNetworkTypeEnabled, perform: { nv in
+                Toggle("Change Data Network Type", isOn: $secondaryDataNetworkTypeEnabled).onChange(of: secondaryDataNetworkTypeEnabled, perform: { nv in
                     if nv {
                         StatusManager.sharedInstance().setSecondaryDataNetworkType(Int32(secondaryDataNetworkType))
                     } else {
@@ -342,7 +349,7 @@ struct StatusBarView: View {
                 })
                 
                 HStack {
-                    Text("Secondary Data Network Type")
+                    Text("Data Network Type")
                     Spacer()
                     
                     Menu {
@@ -365,7 +372,10 @@ struct StatusBarView: View {
                     secondaryDataNetworkType = Int(StatusManager.sharedInstance().getSecondaryDataNetworkTypeOverride())
                 })
             } header: {
-                Text("Secondary Carrier")
+                HStack {
+                    Image(systemName: "2.square.fill")
+                    Text("Secondary Carrier")
+                }
             }
             Section {
                 Toggle("Change Breadcrumb Text", isOn: $crumbTextEnabled).onChange(of: crumbTextEnabled, perform: { nv in

@@ -22,6 +22,8 @@ struct GestaltView: View {
     
     struct GestaltSection: Identifiable {
         var id = UUID()
+        var headerText: String
+        var headerIcon: String
         var tweaks: [GestaltTweak]
     }
     
@@ -55,42 +57,49 @@ struct GestaltView: View {
     
     // list of mobile gestalt tweaks
     @State var gestaltTweaks: [GestaltSection] = [
-        .init(tweaks: [
-            .init(label: "Enable Boot Chime", keys: ["QHxt+hGLaBPbQJbXiUJX3w"]),
-            .init(label: "Enable Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"]),
-            .init(label: "Enable Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"]),
-            .init(label: "Enable Tap to Wake (iPhone SE)", keys: ["yZf3GTRMGTuwSV/lD7Cagw"]),
-            .init(label: "Enable iPhone 16 Camera Button Settings", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
-            .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0])
+        .init(headerText: "Feature Enablers", headerIcon: "apps.iphone.badge.plus", tweaks: [
+            .init(label: "Always On Display", keys: ["2OOJf1VhaM7NxfRok3HbWQ", "j8/Omm6s1lsmTDFsXjsBfA"], values: [1, 1], minVersion: Version(string: "18.0")),
+            .init(label: "Boot Chime", keys: ["QHxt+hGLaBPbQJbXiUJX3w"]),
+            .init(label: "Charge Limit", keys: ["37NVydb//GP/GrhuTN+exg"]),
+            .init(label: "Tap to Wake", keys: ["yZf3GTRMGTuwSV/lD7Cagw"]),
         ]),
-        .init(tweaks: [
-            .init(label: "Enable Stage Manager Supported (WARNING: risky on some devices, mainly phones)", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1]),
-            .init(label: "Enable Medusa (iPad Multitasking) (WARNING: may be risky on phones)", keys: ["mG0AnH/Vy1veoqoLRAIgTA", "UCG5MkVahJxG1YULbbd5Bg", "ZYqko/XM5zD3XBfN5RmaXA", "nVh/gwNpy7Jv1NOk00CMrw", "uKc7FPnEO++lVhHWHFlGbQ"], values: [1, 1, 1, 1, 1]),
+        .init(headerText: "iPadOS Features", headerIcon: "ipad", tweaks: [
+            .init(label: "Stage Manager", keys: ["qeaj75wk3HF4DwQ8qbIi7g"], values: [1]),
+            .init(label: "Medusa (iPad Multitasking)", keys: ["mG0AnH/Vy1veoqoLRAIgTA", "UCG5MkVahJxG1YULbbd5Bg", "ZYqko/XM5zD3XBfN5RmaXA", "nVh/gwNpy7Jv1NOk00CMrw", "uKc7FPnEO++lVhHWHFlGbQ"], values: [1, 1, 1, 1, 1]),
             .init(label: "Allow iPad Apps on iPhone", keys: ["9MZ5AdH43csAUajl/dU+IQ"], values: [[1, 2]]),
-            .init(label: "Disable Region Restrictions (ie. Shutter Sound)", keys: ["h63QSdBCiT/z0WU6rdQv6Q", "zHeENZu+wbg7PUprwNwBWg"], values: ["US", "LL/A"]),
-            .init(label: "Enable Apple Pencil", keys: ["yhHcB0iH0d1XzPO/CFd3ow"]),
+        ]),
+        .init(headerText: "Settings", headerIcon: "gear", tweaks: [
+            .init(label: "Collision SOS", keys: ["HCzWusHQwZDea6nNhaKndw"]),
+            .init(label: "Camera Button", keys: ["CwvKxM2cEogD3p+HYgaW0Q", "oOV1jhJbdV3AddkcCg0AEA"], values: [1, 1], minVersion: Version(string: "18.0")),
+            .init(label: "Apple Pencil", keys: ["yhHcB0iH0d1XzPO/CFd3ow"]),
             .init(label: "Toggle Action Button", keys: ["cT44WE1EohiwRzhsZ8xEsw"])
         ]),
-        .init(tweaks: [
-            .init(label: "Toggle Internal Storage (WARNING: risky for some devices, mainly iPads)", keys: ["LBJfwOEzExRxzlAnSuI7eg"]),
-            .init(label: "Set as Apple Internal Install (ie Metal HUD in any app)", keys: ["EqrsVvjcYDdxHBiQmGhAWw"]),
-            .init(label: "Always On Display", keys: ["2OOJf1VhaM7NxfRok3HbWQ", "j8/Omm6s1lsmTDFsXjsBfA"], values: [1, 1], minVersion: Version(string: "18.0"))
+        .init(headerText: "Miscellaeuous", headerIcon: "plus.diamond.fill", tweaks: [
+            .init(label: "Disable Wallpaper Parallax", keys: ["UIParallaxCapability"], values: [0]),
+            .init(label: "Disable Region Restrictions", keys: ["h63QSdBCiT/z0WU6rdQv6Q", "zHeENZu+wbg7PUprwNwBWg"], values: ["US", "LL/A"]),
+        ]),
+        .init(headerText: "Internal", headerIcon: "ant.fill", tweaks: [
+            .init(label: "Toggle Internal Storage", keys: ["LBJfwOEzExRxzlAnSuI7eg"]),
+            .init(label: "Apple Internal Install", keys: ["EqrsVvjcYDdxHBiQmGhAWw"]),
         ])
     ]
     
     var body: some View {
         List {
             Section {
+                // warning
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .padding(.trailing, 6)
+                        .font(.system(size: 25, weight: .regular, design: .default))
+                        .foregroundStyle(.yellow)
+                    Text("**Warning:** Some of these tweaks may cause issues with your device, mainly **Internal** and **iPadOS**.")
+                }
+            }
+            Section {
                 // device subtype
                 HStack {
-                    Image(systemName: "ipodtouch")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.blue)
-                    
-                    
-                    Text("Gestures / Dynamic Island")
+                    Text("Gestures & Dynamic Island")
                         .minimumScaleFactor(0.5)
                     
                     Spacer()
@@ -115,7 +124,7 @@ struct GestaltView: View {
                 
                 // device model name
                 VStack {
-                    Toggle("Change Device Model Name", isOn: $deviceModelChanged).onChange(of: deviceModelChanged, perform: { nv in
+                    Toggle("Device Model Name", isOn: $deviceModelChanged).onChange(of: deviceModelChanged, perform: { nv in
                         if nv {
                             if deviceModelName != "" {
                                 gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
@@ -124,16 +133,21 @@ struct GestaltView: View {
                             gestaltManager.removeGestaltValue(key: "ArtworkDeviceProductDescription")
                         }
                     })
-                    TextField("Device Model Name", text: $deviceModelName).onChange(of: deviceModelName, perform: { nv in
+                    TextField("Custom Text", text: $deviceModelName).onChange(of: deviceModelName, perform: { nv in
                         if deviceModelChanged {
                             gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
                         }
                     })
                 }
+            } header: {
+                Label("Gestures & Model Name", systemImage: "platter.filled.top.and.arrow.up.iphone")
             }
             // tweaks from list
             ForEach($gestaltTweaks) { category in
-                Section {
+                Section(header: HStack {
+                    Image(systemName: category.headerIcon.wrappedValue)
+                    Text(category.headerText.wrappedValue)
+                }) {
                     ForEach(category.tweaks) { tweak in
                         if userVersion >= tweak.minVersion.wrappedValue {
                             Toggle(tweak.label.wrappedValue, isOn: tweak.active).onChange(of: tweak.active.wrappedValue, perform: { nv in
@@ -149,7 +163,7 @@ struct GestaltView: View {
             }
         }
         .tweakToggle(for: .MobileGestalt)
-        .navigationTitle("Mobile Gestalt")
+        .navigationTitle("MobileGestalt")
         .navigationViewStyle(.stack)
         .onAppear {
             // get the base device subtype

@@ -60,7 +60,7 @@ struct EligibilityView: View {
                         }
                     }
                 } header: {
-                    Text("AI Enabler")
+                    Label("Apple Intelligence", systemImage: "apple.intelligence")
                 }
             }
         }
