@@ -27,7 +27,7 @@ struct RevertTweaksPopoverView: View {
                 Section {
                     ForEach($tweakOptions) { option in
                         Toggle(isOn: option.enabled) {
-                            Text("Revert \(option.page.wrappedValue.rawValue)")
+                            Text("\(option.page.wrappedValue.rawValue)")
                         }
                         .toggleStyle(.switch)
                         .onChange(of: option.enabled.wrappedValue) { nv in
@@ -39,19 +39,37 @@ struct RevertTweaksPopoverView: View {
                         }
                     }
                 }
-                .navigationTitle("Select Tweaks")
+                .navigationTitle("Select Tweaks to Revert")
                 Section {
-                    // Apply button
-                    Button("Remove Tweaks") {
-                        dismiss()
-                        revertFunction(true)
+                    HStack {
+                        // Cancel button
+                        Button(action: {
+                            dismiss()
+                            revertFunction(true)
+                        }) {
+                            HStack(spacing: 9) {
+                                Image(systemName: "arrow.left")
+                                Text("Cancel")
+                            }
+                        }
+                        .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                        .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                        // Revert button
+                        Button(action: {
+                            dismiss()
+                            revertFunction(true)
+                        }) {
+                            HStack(spacing: 9) {
+                                Image(systemName: "trash.fill")
+                                Text("Revert")
+                            }
+                        }
+                        .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                        .buttonStyle(TintedButton(color: .red, fullwidth: true))
+                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                     }
-                    .buttonStyle(TintedButton(color: .red, fullwidth: true))
-                    // Cancel button
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                    .padding(.vertical, 6)
                 }
             }
             .onAppear {
