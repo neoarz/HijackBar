@@ -47,6 +47,7 @@
 		6F8594D42C9A006800F790D1 /* ModifyTweakViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594D32C9A006800F790D1 /* ModifyTweakViewModifier.swift */; };
 		6F8594D92C9C9F6E00F790D1 /* HelperFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594D82C9C9F6E00F790D1 /* HelperFuncs.swift */; };
 		AA71744B2D7C127C0080ACA8 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA71744A2D7C127C0080ACA8 /* CreditsView.swift */; };
+		AA80C9CB2D84DB48000A0150 /* TabBar in Frameworks */ = {isa = PBXBuildFile; productRef = AA80C9CA2D84DB48000A0150 /* TabBar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA80C9CB2D84DB48000A0150 /* TabBar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +331,7 @@
 			);
 			mainGroup = 6F8593482C8F41E000F790D1;
 			packageReferences = (
+				AA80C9C92D84DB48000A0150 /* XCRemoteSwiftPackageReference "TabBar" */,
 			);
 			productRefGroup = 6F8593522C8F41E000F790D1 /* Products */;
 			projectDirPath = "";
@@ -610,6 +613,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA80C9C92D84DB48000A0150 /* XCRemoteSwiftPackageReference "TabBar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onl1ner/TabBar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA80C9CA2D84DB48000A0150 /* TabBar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA80C9C92D84DB48000A0150 /* XCRemoteSwiftPackageReference "TabBar" */;
+			productName = TabBar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6F8593492C8F41E000F790D1 /* Project object */;
 }
