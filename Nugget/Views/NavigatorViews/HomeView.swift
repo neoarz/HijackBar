@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 struct HomeView: View {
     private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
-    
+
     @State var showRevertPage = false
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
@@ -29,7 +29,6 @@ struct HomeView: View {
                 Section {
                     VStack {
                         HStack {
-                            // apply all tweaks button
                             HStack {
                                 Button(action: {
                                     applyChanges(reverting: false)
@@ -39,11 +38,10 @@ struct HomeView: View {
                                         Text("Apply")
                                     }
                                 }
-                                .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .buttonStyle(TintedButton(color: .blue, fullwidth: true))
                                 .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                             }
-                            // remove all tweaks button
                             HStack {
                                 Button(action: {
                                     showRevertPage.toggle()
@@ -53,7 +51,7 @@ struct HomeView: View {
                                         Text("Revert")
                                     }
                                 }
-                                .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .buttonStyle(TintedButton(color: .red, fullwidth: true))
                                 .sheet(isPresented: $showRevertPage, content: {
                                     RevertTweaksPopoverView(revertFunction: applyChanges(reverting:))
@@ -71,10 +69,11 @@ struct HomeView: View {
                                     }) {
                                         HStack(spacing: 8) {
                                             Image(systemName: "doc.fill")
-                                            Text("Select Pairing File")
+                                            Text("Import Pairing File")
                                         }
                                     }
-                                    .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                                    .frame(maxHeight: 45)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .buttonStyle(TintedButton(color: .orange, fullwidth: true))
                                     .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                                 }
@@ -84,41 +83,43 @@ struct HomeView: View {
                                 }) {
                                     HStack(spacing: 8) {
                                         Image(systemName: "doc.fill.badge.plus")
-                                        Text("Reset Pairing File")
+                                        Text("Remove Pairing File")
                                     }
                                 }
-                                .mask { RoundedRectangle(cornerRadius: 12, style: .continuous) }
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .buttonStyle(TintedButton(color: .green, fullwidth: true))
                             }
                         }
                     }
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, -1)
+                    .listRowInsets(EdgeInsets())
+                    .padding()
                 } header: {
-                    Label("Tweak Options", systemImage: "gearshape.fill")
+                    Label("Tweak Options", systemImage: "hammer.fill")
                         .padding(.leading, -4)
                 }
+                // MARK: Preferences
                 Section {
                     VStack(spacing: 14) {
                         // auto reboot option
                         HStack {
-                            Image(systemName: "power")
+                            //Image(systemName: "power")
                             Toggle(isOn: $autoReboot) {
                                 Text("Reboot after apply")
                                     .minimumScaleFactor(0.5)
                             }
                         }
+                        Divider()
                         // skip setup
                         Toggle(isOn: $skipSetup) {
                             HStack {
-                                Image(systemName: "restart.circle.fill")
+                                //Image(systemName: "restart.circle.fill")
                                 Text("Traditional Skip Setup")
                                     .minimumScaleFactor(0.5)
                             }
                         }
                     }
                 } header: {
-                    Label("Application Options", systemImage: "hammer.fill")
+                    Label("Preferences", systemImage: "gearshape.fill")
                         .padding(.leading, -4)
                 } footer : {
                     Text("**Traditional Skip Setup**: If you use configuration profiles, please turn this off.\n\nSkip Setup will only be applied when restoring **Status Bar** Tweaks.")
@@ -139,11 +140,25 @@ struct HomeView: View {
                                 }
                             })
                             .alert("Error", isPresented: $showErrorAlert) {
-                                Button("OK") {}
+                                Button("Continue") {}
                             } message: {
                                 Text(lastError ?? "???")
                             }
-
+                // MARK: Credits
+                Section {
+                    NavigationLink(destination: CreditsView()) {
+                        HStack {
+                            Text("Credits")
+                        }
+                    }
+                    NavigationLink(destination: CreditsView()) {
+                        HStack {
+                            Text("How To Use")
+                        }
+                    }
+                } header: {
+                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "\(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info.circle.fill")
+                }
             }
             .onOpenURL(perform: { url in
                 // for opening the mobiledevicepairing file
@@ -166,7 +181,7 @@ struct HomeView: View {
                 }
                 startMinimuxer()
             }
-            .navigationTitle("Nugget Revamped")
+            //.navigationTitle("Nugget Revamped")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
@@ -193,7 +208,7 @@ struct HomeView: View {
         if ApplyHandler.shared.trollstore || ready() {
             if !reverting && ApplyHandler.shared.allEnabledTweaks().isEmpty {
                 // if there are no enabled tweaks then tell the user
-                UIApplication.shared.alert(body: "You do not have any tweaks enabled! Go to the tools page to select some.")
+                UIApplication.shared.alert(body: "You do not have any tweaks enabled. Go to the tweaks page to select some.")
             } else if ApplyHandler.shared.isExploitOnly() {
                 path.append(reverting ? "RevertChanges" : "ApplyChanges")
             } else if !ApplyHandler.shared.trollstore {
@@ -203,62 +218,11 @@ struct HomeView: View {
                 }, noCancel: false)
             }
         } else if pairingFile == nil {
-            lastError = "Please select your pairing file to continue."
+            lastError = "Please import your pairing file to apply any tweaks."
             showErrorAlert.toggle()
         } else {
-            lastError = "minimuxer is not ready. Ensure you have WiFi and WireGuard VPN set up."
+            lastError = "Minimuxer is not responding. Ensure that StosVPN is enabled and connected."
             showErrorAlert.toggle()
-        }
-    }
-    
-    struct LinkCell: View {
-        var imageName: String
-        var url: String
-        var title: String
-        var contribution: String
-        var systemImage: Bool = false
-        var circle: Bool = false
-        
-        var body: some View {
-            HStack(alignment: .center) {
-                Group {
-                    if systemImage {
-                        Image(systemName: imageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    } else {
-                        if imageName != "" {
-                            Image(imageName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        }
-                    }
-                }
-                .cornerRadius(circle ? .infinity : 0)
-                .frame(width: 24, height: 24)
-                
-                VStack {
-                    HStack {
-                        Button(action: {
-                            if url != "" {
-                                UIApplication.shared.open(URL(string: url)!)
-                            }
-                        }) {
-                            Text(title)
-                                .fontWeight(.bold)
-                        }
-                        .padding(.horizontal, 6)
-                        Spacer()
-                    }
-                    HStack {
-                        Text(contribution)
-                            .padding(.horizontal, 6)
-                            .font(.footnote)
-                        Spacer()
-                    }
-                }
-            }
-            .foregroundColor(.blue)
         }
     }
     

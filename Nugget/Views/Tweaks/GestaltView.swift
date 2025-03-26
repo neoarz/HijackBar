@@ -44,6 +44,11 @@ struct GestaltView: View {
     @State private var deviceModelChanged: Bool = false
     @State private var deviceModelName: String = ""
     
+    @State private var customMGAKey: String = ""
+    @State private var customMGAValue: String = ""
+    @State private var showMGAAlert: Bool = false
+    @State private var alertMGAMessage: String = ""
+    
     // list of device subtype options
     @State var deviceSubTypes: [DeviceSubType] = [
         .init(key: -1, title: NSLocalizedString("Default", comment: "default device subtype")),
@@ -159,6 +164,34 @@ struct GestaltView: View {
                             })
                         }
                     }
+                }
+            }
+            // MARK: Custom MobileGestalt Keys
+            Section {
+                TextField("Key", text: $customMGAKey)
+                    .textInputAutocapitalization(.none)
+                    .autocorrectionDisabled(true)
+                TextField("Value", text: $customMGAValue)
+                    .textInputAutocapitalization(.none)
+                    .autocorrectionDisabled(true)
+                Button("Add Key") {
+                    if customMGAKey.isEmpty || customMGAValue.isEmpty {
+                        alertMGAMessage = "Please input a vaild MGA key and value."
+                        showMGAAlert = true
+                    } else {
+                        if let value = Int(customMGAValue) {
+                            gestaltManager.setGestaltValue(key: customMGAKey, value: value)
+                        } else {
+                            gestaltManager.setGestaltValue(key: customMGAKey, value: customMGAValue)
+                        }
+                        customMGAKey = ""
+                        customMGAValue = ""
+                        alertMGAMessage = "Added Key"
+                        showMGAAlert = true
+                    }
+                }
+                .alert(isPresented: $showMGAAlert) {
+                    Alert(title: Text("TITLE_MGA"), message: Text(alertMGAMessage), dismissButton: .default(Text("OK")))
                 }
             }
         }
