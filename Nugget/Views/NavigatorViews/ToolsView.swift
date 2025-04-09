@@ -22,16 +22,17 @@ struct ToolsView: View {
     struct ToolCategory: Identifiable {
         var id = UUID()
         var title: String
+        var icon: String
         var pages: [GeneralOption]
     }
     
     @State var tools: [ToolCategory] = [
-        .init(title: "Feature Enablers", pages: [
+        .init(title: "Feature Enablers", icon: "sparkles", pages: [
             .init(page: .MobileGestalt, view: AnyView(GestaltView()), title: NSLocalizedString("MobileGestalt", comment: "Title of tool"), imageName: "platter.filled.top.and.arrow.up.iphone"),
             .init(page: .FeatureFlags, view: AnyView(FeatureFlagsView()), title: NSLocalizedString("Feature Flags", comment: "Title of tool"), imageName: "checklist", minVersion: Version(string: "18.0")),
-            .init(page: .Eligibility, view: AnyView(EligibilityView()), title: NSLocalizedString("Apple Intelligence & Eligibility", comment: "Title of tool"), imageName: "apple.intelligence", minVersion: Version(string: "18.1")/*Version(string: "17.4")*/),
+            .init(page: .Eligibility, view: AnyView(EligibilityView()), title: NSLocalizedString("Apple Intelligence", comment: "Title of tool"), imageName: "apple.intelligence", minVersion: Version(string: "18.1")/*Version(string: "17.4")*/),
         ]),
-        .init(title: "Basic Tweaks", pages: [
+        .init(title: "Basic Tweaks", icon: "doc.badge.gearshape.fill", pages: [
             .init(page: .StatusBar, view: AnyView(StatusBarView()), title: NSLocalizedString("Status Bar", comment: "Title of tool"), imageName: "wifi"),
             .init(page: .SpringBoard, view: AnyView(SpringboardTweaksView()), title: NSLocalizedString("SpringBoard", comment: "Title of tool"), imageName: "app.badge"),
             .init(page: .Internal, view: AnyView(InternalOptionsView()), title: NSLocalizedString("Internal", comment: "Title of tool"), imageName: "internaldrive"),
@@ -48,10 +49,14 @@ struct ToolsView: View {
                     HStack {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .padding(.trailing, 6)
-                            .font(.system(size: 25, weight: .regular, design: .default))
-                            .foregroundStyle(.yellow)
+                            .font(.system(size: 24, weight: .regular, design: .default))
+                            .foregroundStyle(.black)
                         Text("**Warning:** If you do not know what an option does, do **not** enable it.")
+                            .font(.system(size: 17))
+                            .foregroundStyle(.black)
                     }
+                    .listRowBackground(Color.yellow)
+                    .padding(.vertical, 4)
                 }
                 ForEach($tools) { category in
                     Section {
@@ -63,7 +68,6 @@ struct ToolsView: View {
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 24, height: 24)
-                                            .foregroundColor(.blue)
                                         Text(option.title.wrappedValue)
                                             .padding(.horizontal, 8)
                                         if applyHandler.isTweakEnabled(option.page.wrappedValue) {
@@ -77,7 +81,11 @@ struct ToolsView: View {
                             }
                         }
                     } header: {
-                        Text(category.title.wrappedValue)
+                        HStack {
+                            Image(systemName: category.icon.wrappedValue)
+                            Text(category.title.wrappedValue)
+                        }
+                        .padding(.leading, -4)
                     }
                 }
             }

@@ -48,16 +48,17 @@ struct GestaltView: View {
     @State private var customMGAValue: String = ""
     @State private var showMGAAlert: Bool = false
     @State private var alertMGAMessage: String = ""
+    @State private var addedKeys: [String: String] = [:]
     
     // list of device subtype options
     @State var deviceSubTypes: [DeviceSubType] = [
         .init(key: -1, title: NSLocalizedString("Default", comment: "default device subtype")),
-        .init(key: 2436, title: NSLocalizedString("iPhone X Gestures", comment: "x gestures")),
-        .init(key: 2556, title: NSLocalizedString("iPhone 14 Pro Dynamic Island", comment: "iPhone 14 Pro SubType")),
-        .init(key: 2796, title: NSLocalizedString("iPhone 14 Pro Max Dynamic Island", comment: "iPhone 14 Pro Max SubType")),
-        .init(key: 2976, title: NSLocalizedString("iPhone 15 Pro Max Dynamic Island", comment: "iPhone 15 Pro Max SubType"), minVersion: Version(string: "17.0")),
-        .init(key: 2622, title: NSLocalizedString("iPhone 16 Pro Dynamic Island", comment: "iPhone 16 Pro SubType"), minVersion: Version(string: "18.0")),
-        .init(key: 2868, title: NSLocalizedString("iPhone 16 Pro Max Dynamic Island", comment: "iPhone 16 Pro Max SubType"), minVersion: Version(string: "18.0"))
+        .init(key: 2436, title: NSLocalizedString("Notched Gestures", comment: "x gestures")),
+        .init(key: 2556, title: NSLocalizedString("Dynamic Island - iPhone 14 Pro", comment: "iPhone 14 Pro SubType")),
+        .init(key: 2796, title: NSLocalizedString("Dynamic Island - iPhone 14 Pro Max", comment: "iPhone 14 Pro Max SubType")),
+        .init(key: 2622, title: NSLocalizedString("Dynamic Island - iPhone 16 Pro", comment: "iPhone 16 Pro SubType"), minVersion: Version(string: "18.0")),
+        .init(key: 2868, title: NSLocalizedString("Dynamic Island - iPhone 16 Pro Max", comment: "iPhone 16 Pro Max SubType"), minVersion: Version(string: "18.0")),
+        .init(key: 2976, title: NSLocalizedString("Disable Dynamic Island - Island Phones ONLY", comment: "iPhone 15 Pro Max SubType"), minVersion: Version(string: "17.0"))
     ]
     
     // list of mobile gestalt tweaks
@@ -97,9 +98,12 @@ struct GestaltView: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .padding(.trailing, 6)
                         .font(.system(size: 25, weight: .regular, design: .default))
-                        .foregroundStyle(.yellow)
-                    Text("**Warning:** Some of these tweaks may cause issues with your device, mainly **Internal** and **iPadOS**.")
+                    Text("**Warning:** Some of these tweaks may be problematic, including **Internal** and **iPadOS**.")
+                        .font(.system(size: 17))
                 }
+                .foregroundStyle(.black)
+                .listRowBackground(Color.yellow)
+                .padding(.vertical, 4)
             }
             Section {
                 // device subtype
@@ -174,7 +178,7 @@ struct GestaltView: View {
                 TextField("Value", text: $customMGAValue)
                     .textInputAutocapitalization(.none)
                     .autocorrectionDisabled(true)
-                Button("Add Key") {
+                Button(action: {
                     if customMGAKey.isEmpty || customMGAValue.isEmpty {
                         alertMGAMessage = "Please input a vaild MGA key and value."
                         showMGAAlert = true
@@ -184,15 +188,54 @@ struct GestaltView: View {
                         } else {
                             gestaltManager.setGestaltValue(key: customMGAKey, value: customMGAValue)
                         }
+                        addedKeys[customMGAKey] = customMGAValue
                         customMGAKey = ""
                         customMGAValue = ""
                         alertMGAMessage = "Added Key"
                         showMGAAlert = true
                     }
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "plus.circle.fill")
+                        Text("Add Key")
+                    }
                 }
+                .frame(maxHeight: 45)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                 .alert(isPresented: $showMGAAlert) {
-                    Alert(title: Text("TITLE_MGA"), message: Text(alertMGAMessage), dismissButton: .default(Text("OK")))
+                    Alert(title: Text("Custom Keys"), message: Text(alertMGAMessage), dismissButton: .default(Text("OK")))
                 }
+            } header : {
+                Label("Custom MGA Keys", systemImage: "key.fill")
+            } footer : {
+                Text("If you do not know what this feature does, do not touch it. You will bootloop your device if you do not use this feature properly.")
+            }
+            Section {
+                if addedKeys.isEmpty {
+                    Text("No keys have been added.")
+                        .foregroundColor(.gray)
+                } else {
+                    ForEach(addedKeys.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                        HStack {
+                            Text(key)
+                                .fontWeight(.bold)
+                            Spacer()
+                            Text(value)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .onDelete { indexSet in
+                        for index in indexSet {
+                            let keyToRemove = addedKeys.sorted(by: { $0.key < $1.key })[index].key
+                            addedKeys.removeValue(forKey: keyToRemove)
+                            gestaltManager.removeGestaltValue(key: keyToRemove)
+                        }
+                    }
+                }
+            } header: {
+                Label("Added Keys & Values", systemImage: "list.bullet")
             }
         }
         .tweakToggle(for: .MobileGestalt)

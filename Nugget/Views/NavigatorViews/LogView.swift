@@ -27,6 +27,11 @@ struct LogView: View {
                     Spacer()
                         .id(0)
                 }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: 650, alignment: .leading)
+                .background(Color(.secondarySystemFill))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .padding(.horizontal, 20)
                 .onAppear {
                     guard !ran else { return }
                     ran = true
@@ -87,9 +92,10 @@ struct LogView: View {
                         }
                     }
                 }
+                Spacer()
             }
         }
-        .navigationTitle("Log output")
+        .navigationTitle("Application Logs")
     }
     
     init(resetting: Bool, autoReboot: Bool, skipSetup: Bool) {

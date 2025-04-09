@@ -65,7 +65,7 @@ struct EligibilityView: View {
             }
         }
         .tweakToggle(for: .Eligibility)
-        .navigationTitle("Eligibility")
+        .navigationTitle("Apple Intelligence")
         .onAppear {
             euEnabler = manager.euEnabler
             aiEnabler = manager.aiEnabler

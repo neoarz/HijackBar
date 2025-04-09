@@ -16,6 +16,7 @@ struct HomeView: View {
     @State var showErrorAlert = false
     @State var lastError: String?
     @State var path = NavigationPath()
+    @State private var appliedTweaks: [String] = []
     
     // Prefs
     @AppStorage("AutoReboot") var autoReboot: Bool = true
@@ -99,23 +100,19 @@ struct HomeView: View {
                 }
                 // MARK: Preferences
                 Section {
-                    VStack(spacing: 14) {
-                        // auto reboot option
+                    Toggle(isOn: $skipSetup) {
                         HStack {
-                            //Image(systemName: "power")
-                            Toggle(isOn: $autoReboot) {
-                                Text("Reboot after apply")
-                                    .minimumScaleFactor(0.5)
-                            }
+                            Image(systemName: "arrow.down.doc")
+                                .frame(width: 20)
+                            Text("Traditional Skip Setup")
+                                .minimumScaleFactor(0.5)
                         }
-                        Divider()
-                        // skip setup
-                        Toggle(isOn: $skipSetup) {
-                            HStack {
-                                //Image(systemName: "restart.circle.fill")
-                                Text("Traditional Skip Setup")
-                                    .minimumScaleFactor(0.5)
-                            }
+                    }
+                    Toggle(isOn: $autoReboot) {
+                        HStack {
+                            Image(systemName: "goforward")
+                                .frame(width: 20)
+                            Text("Reboot After Applying")
                         }
                     }
                 } header: {
@@ -125,34 +122,50 @@ struct HomeView: View {
                     Text("**Traditional Skip Setup**: If you use configuration profiles, please turn this off.\n\nSkip Setup will only be applied when restoring **Status Bar** Tweaks.")
                 }
                 .fileImporter(isPresented: $showPairingFileImporter, allowedContentTypes: [UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!, UTType(filenameExtension: "mobiledevicepair", conformingTo: .data)!], onCompletion: { result in
-                                switch result {
-                                case .success(let url):
-                                    do {
-                                        pairingFile = try String(contentsOf: url)
-                                        startMinimuxer()
-                                    } catch {
-                                        lastError = error.localizedDescription
-                                        showErrorAlert.toggle()
-                                    }
-                                case .failure(let error):
-                                    lastError = error.localizedDescription
-                                    showErrorAlert.toggle()
-                                }
-                            })
-                            .alert("Error", isPresented: $showErrorAlert) {
-                                Button("Continue") {}
-                            } message: {
-                                Text(lastError ?? "???")
-                            }
+                    switch result {
+                    case .success(let url):
+                        do {
+                            pairingFile = try String(contentsOf: url)
+                            startMinimuxer()
+                        } catch {
+                            lastError = error.localizedDescription
+                            showErrorAlert.toggle()
+                        }
+                    case .failure(let error):
+                        lastError = error.localizedDescription
+                        showErrorAlert.toggle()
+                    }
+                })
+                .alert("Error", isPresented: $showErrorAlert) {
+                    Button("Continue") {}
+                } message: {
+                    Text(lastError ?? "???")
+                }
                 // MARK: Credits
                 Section {
-                    NavigationLink(destination: CreditsView()) {
-                        HStack {
-                            Text("Credits")
+                    NavigationLink(destination: LogView(resetting: false, autoReboot: false, skipSetup: false)) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "apple.terminal.fill")
+                                .frame(width: 20)
+                                .font(.system(size: 16))
+                            Text("Show Logs")
                         }
                     }
                     NavigationLink(destination: CreditsView()) {
-                        HStack {
+                        HStack(spacing: 10) {
+                            Image(systemName: "star.fill")
+                                .frame(width: 20)
+                            Text("Credits")
+                        }
+                    }
+                    Button(action: {
+                        if let url = URL(string: "https://gist.github.com/lunginspector/3d7ea2496b3180ee88bad1ac7fdf5e2a") {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "info.circle.fill")
+                                .frame(width: 20)
                             Text("How To Use")
                         }
                     }
@@ -181,7 +194,7 @@ struct HomeView: View {
                 }
                 startMinimuxer()
             }
-            //.navigationTitle("Nugget Revamped")
+            .navigationTitle("Morsel")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
