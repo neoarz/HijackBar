@@ -169,20 +169,21 @@ class MobileGestaltManager {
     }
     
     func apply() throws -> Data? {
-        if self.GestaltChanges.isEmpty {
+        guard !self.GestaltChanges.isEmpty else {
+            print("No custom keys are being applied.")
             return nil
         }
+        
         let gestaltData = try Data(contentsOf: URL(fileURLWithPath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/com.apple.MobileGestalt.plist"))
         var plist = try PropertyListSerialization.propertyList(from: gestaltData, options: [], format: nil) as! [String: Any]
         
         if var newPlist = plist["CacheExtra"] as? [String: Any] {
-            
             for key in self.GestaltChanges.keys {
                 if key != "IOMobileGraphicsFamily" && (key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1) {
                     var changed = false
                     (newPlist, changed) = setPlistValue(newPlist, key: key, value: self.GestaltChanges[key] as Any)
                     if !changed {
-                        // not found, change in CacheExtra
+                        // Not found, add to CacheExtra
                         newPlist[key] = self.GestaltChanges[key]
                     }
                 }
@@ -191,7 +192,6 @@ class MobileGestaltManager {
         }
         
         return try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
-//        return FileToRestore.init(contents: newData, restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")
     }
     
     func applyRdarFix() -> Data? {
