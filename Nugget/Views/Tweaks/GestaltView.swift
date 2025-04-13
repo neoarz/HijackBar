@@ -273,12 +273,8 @@ struct GestaltView: View {
             // finally, do the other values
             for (i, category) in gestaltTweaks.enumerated() {
                 for (j, gestaltTweak) in category.tweaks.enumerated() {
-                    if gestaltTweak.keys.count > 0 {
-                        if enabledTweaks[gestaltTweak.keys[0]] != nil {
-                            gestaltTweaks[i].tweaks[j].active = true
-                        } else if gestaltTweak.active {
-                            gestaltManager.setGestaltValues(keys: gestaltTweak.keys, values: gestaltTweak.values)
-                        }
+                    if gestaltTweak.keys.count > 0 && enabledTweaks[gestaltTweak.keys[0]] != nil {
+                        gestaltTweaks[i].tweaks[j].active = true
                     }
                 }
             }
