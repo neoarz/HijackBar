@@ -159,7 +159,7 @@ class MobileGestaltManager {
         if mode == 1 || mode == 3 {
             return "Fix rdar"
         } else if mode == 2 {
-            return "Status Bar Fix"
+            return "DI status bar fix"
         }
         return "hide"
     }
