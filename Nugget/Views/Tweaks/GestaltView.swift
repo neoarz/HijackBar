@@ -38,6 +38,7 @@ struct GestaltView: View {
     @State private var CurrentSubTypeDisplay: String = "Default"
     
     @State private var modifyResolution: Bool = false
+    @State private var enableCustomResolution: Bool = false
     private let resMode: Int = MobileGestaltManager.shared.getRdarFixMode()
     private let resTitle: String = MobileGestaltManager.shared.getRdarFixTitle()
     
@@ -46,6 +47,8 @@ struct GestaltView: View {
     
     @State private var customMGAKey: String = ""
     @State private var customMGAValue: String = ""
+    @State private var customWidth: String = ""
+    @State private var customHeight: String = ""
     @State private var showMGAAlert: Bool = false
     @State private var alertMGAMessage: String = ""
     @State private var addedKeys: [String: String] = [:]
@@ -236,6 +239,50 @@ struct GestaltView: View {
                 }
             } header: {
                 Label("Added Keys & Values", systemImage: "list.bullet")
+            }
+            Section {
+                Toggle("Enable Custom Resolution", isOn: $enableCustomResolution)
+                
+                if enableCustomResolution {
+                    TextField("Width", text: $customWidth)
+                        .keyboardType(.numberPad)
+                    TextField("Height", text: $customHeight)
+                        .keyboardType(.numberPad)
+                    Button(action: {
+                        guard let width = Int(customWidth), let height = Int(customHeight), width > 0, height > 0 else {
+                            alertMGAMessage = "Please enter valid width and height values."
+                            showMGAAlert = true
+                            return
+                        }
+                        let plist: [String: Int] = [
+                            "canvas_width": width,
+                            "canvas_height": height
+                        ]
+                        if let data = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) {
+                            gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: data)
+                        } else {
+                            alertMGAMessage = "Failed to apply custom resolution. Please restart the app."
+                        }
+                        alertMGAMessage = "it set lol"
+                        showMGAAlert = true
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Set Resolution")
+                        }
+                    }
+                    .frame(maxHeight: 45)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
+                }
+            } header: {
+                Label("Resolution Setter", systemImage: "eye.fill")
+            } footer: {
+                Text("WARNING: This could cause unexpected outcomes if you do not set the right values.")
+            }
+            .alert(isPresented: $showMGAAlert) {
+                Alert(title: Text("Custom Resolution"), message: Text(alertMGAMessage), dismissButton: .default(Text("OK")))
             }
         }
         .tweakToggle(for: .MobileGestalt)
