@@ -242,40 +242,42 @@ struct GestaltView: View {
             }
             Section {
                 Toggle("Enable Custom Resolution", isOn: $enableCustomResolution)
-                
-                if enableCustomResolution {
-                    TextField("Width", text: $customWidth)
-                        .keyboardType(.numberPad)
-                    TextField("Height", text: $customHeight)
-                        .keyboardType(.numberPad)
-                    Button(action: {
-                        guard let width = Int(customWidth), let height = Int(customHeight), width > 0, height > 0 else {
-                            alertMGAMessage = "Please enter valid width and height values."
+                    if enableCustomResolution {
+                        TextField("Width", text: $customWidth)
+                            .keyboardType(.numberPad)
+                        TextField("Height", text: $customHeight)
+                            .keyboardType(.numberPad)
+                        Button(action: {
+                            guard let width = Int(customWidth), let height = Int(customHeight), width > 0, height > 0 else {
+                                alertMGAMessage = "Please enter valid width and height values."
+                                showMGAAlert = true
+                                return
+                            }
+
+                            let plist: [String: Int] = [
+                                "canvas_width": width,
+                                "canvas_height": height
+                            ]
+
+                            if let data = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) {
+                                gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: data)
+                                alertMGAMessage = "Custom resolution set."
+                            } else {
+                                alertMGAMessage = "Could not set custom resolution."
+                            }
+
                             showMGAAlert = true
-                            return
+                        }) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Set Resolution")
+                            }
                         }
-                        let plist: [String: Int] = [
-                            "canvas_width": width,
-                            "canvas_height": height
-                        ]
-                        if let data = try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0) {
-                            gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: data)
-                        } else {
-                            alertMGAMessage = "Failed to apply custom resolution. Please restart the app."
-                        }
-                        alertMGAMessage = "it set lol"
-                        showMGAAlert = true
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Set Resolution")
-                        }
+                        .frame(maxHeight: 45)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                        .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                     }
-                    .frame(maxHeight: 45)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .buttonStyle(TintedButton(color: .blue, fullwidth: true))
-                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
-                }
             } header: {
                 Label("Resolution Setter", systemImage: "eye.fill")
             } footer: {
