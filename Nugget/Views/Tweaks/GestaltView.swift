@@ -33,6 +33,29 @@ struct GestaltView: View {
         var title: String
         var minVersion: Version = Version(string: "16.0")
     }
+    struct ResolutionPreset: Identifiable, Hashable, Equatable {
+        let id = UUID()
+        let name: String
+        let width: Int
+        let height: Int
+    }
+    
+    @State private var selectedPreset: ResolutionPreset? = nil
+    @State private var enableCustomResolution: Bool = false
+    @State private var resolutionPresets: [ResolutionPreset] = [
+        ResolutionPreset(name: "iPhone 16 Pro Max", width: 1320, height: 2868),
+        ResolutionPreset(name: "iPhone 16 Pro", width: 1206, height: 2622),
+        ResolutionPreset(name: "iPhone 16", width: 1179, height: 2556),
+        ResolutionPreset(name: "iPhone 15/16 Plus", width: 1290, height: 2796),
+        ResolutionPreset(name: "iPhone 14/15 Pro Max", width: 1290, height: 2796),
+        ResolutionPreset(name: "iPhone 15 & 14/15 Pro", width: 1179, height: 2556),
+        ResolutionPreset(name: "iPhone 14 Plus/13 Pro Max", width: 1284, height: 2778),
+        ResolutionPreset(name: "iPhone 12/12 Pro, 13/13 Pro, & 14", width: 1170, height: 2532),
+        ResolutionPreset(name: "iPhone 12/13 mini", width: 1080, height: 2340),
+        ResolutionPreset(name: "iPhone XS Max/11 Pro Max", width: 1242, height: 2688),
+        ResolutionPreset(name: "iPhone X, XS, & 11 Pro", width: 1125, height: 2436),
+        ResolutionPreset(name: "iPhone XR/11", width: 828, height: 1792)
+    ]
     
     @State private var CurrentSubType: Int = -1
     @State private var CurrentSubTypeDisplay: String = "Default"
@@ -153,7 +176,7 @@ struct GestaltView: View {
                 Label("Gestures & Model Name", systemImage: "platter.filled.top.and.arrow.up.iphone")
             }
             Section {
-                Toggle("Custom Resolution", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
+                Toggle("Change Resolution", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
                     if !nv {
                         // Reset the resolution when toggled off
                         gestaltManager.removeGestaltValue(key: "canvas_width")
@@ -162,38 +185,63 @@ struct GestaltView: View {
                 })
                 
                 if modifyResolution {
-                    VStack {
-                        HStack {
-                            Text("Width:")
-                            TextField("Enter width", text: Binding(
-                                get: { String(Int(customWidth) ?? 0) },
-                                set: { customWidth = Int($0) ?? 0 }
-                            ))
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Picker("Preset", selection: $selectedPreset) {
+                        Text("Default").tag(nil as ResolutionPreset?)
+                        ForEach(resolutionPresets) { preset in
+                            Text(preset.name).tag(preset as ResolutionPreset?)
                         }
-                        HStack {
-                            Text("Height:")
-                            TextField("Enter height", text: Binding(
-                                get: { String(Int(customHeight) ?? 0) },
-                                set: { customHeight = Int($0) ?? 0 }
-                            ))
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                        }
-                        Button("Apply Resolution") {
-                            if customWidth > 0 && customHeight > 0 {
-                                gestaltManager.setGestaltValue(key: "canvas_width", value: customWidth)
-                                gestaltManager.setGestaltValue(key: "canvas_height", value: customHeight)
-                            }
-                        }
-                        .buttonStyle(TintedButton(color: .blue, fullwidth: true))
                     }
+                    .onChange(of: selectedPreset) { newPreset in
+                        if let preset = newPreset {
+                            customWidth = preset.width
+                            customHeight = preset.height
+                        }
+                    }
+                    
+                    Toggle("Enable Custom Resolution", isOn: $enableCustomResolution)
+                    if enableCustomResolution {
+                        HStack {
+                            Text("Height: ")
+                            TextField("Height", text: Binding(
+                                get: { String(Int(customHeight)) },
+                                set: { customHeight = Int($0) ?? 2556 }
+                            ))
+                        }
+                        .keyboardType(.numberPad)
+                        HStack {
+                            Text("Width: ")
+                            TextField("Width", text: Binding(
+                                get: { String(Int(customWidth)) },
+                                set: { customWidth = Int($0) ?? 1179 }
+                            ))
+                            .keyboardType(.numberPad)
+                        }
+                    }
+                    Button(action: {
+                        if customWidth > 0 && customHeight > 0 {
+                            gestaltManager.setGestaltValue(key: "canvas_width", value: customWidth)
+                            gestaltManager.setGestaltValue(key: "canvas_height", value: customHeight)
+                            alertMGAMessage = "Resolution Set Successfully: \(customWidth), \(customHeight)"
+                            showMGAAlert = true
+                        }
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Set Resolution")
+                        }
+                    }
+                    .alert(isPresented: $showMGAAlert) {
+                        Alert(title: Text("Custom Keys"), message: Text(alertMGAMessage), dismissButton: .default(Text("OK")))
+                    }
+                    .frame(maxHeight: 45)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                 }
             } header: {
-                Label("Custom Resolution Changer", systemImage: "aspectratio")
+                Label("Resolution Changer", systemImage: "aspectratio")
             } footer: {
-                Text("Enter custom width and height to modify the resolution. Ensure the values are valid.")
+                Text("**WARNING:** Do not set a custom resolution unless you know FOR SURE what you are doing.")
             }
             // tweaks from list
             ForEach($gestaltTweaks) { category in
@@ -362,4 +410,8 @@ struct GestaltView: View {
         // present the alert
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true)
     }
+}
+
+#Preview {
+    GestaltView()
 }
