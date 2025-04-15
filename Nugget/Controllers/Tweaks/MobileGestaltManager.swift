@@ -178,7 +178,7 @@ class MobileGestaltManager {
         if var newPlist = plist["CacheExtra"] as? [String: Any] {
             
             for key in self.GestaltChanges.keys {
-                if key != "IOMobileGraphicsFamily" && (key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1) {
+                if key != "IOMobileGraphicsFamily" && (key != "ArtworkDeviceSubType" || self.GestaltChanges[key] as? Int ?? -1 != -1) && key != "CustomResolution" {
                     var changed = false
                     (newPlist, changed) = setPlistValue(newPlist, key: key, value: self.GestaltChanges[key] as Any)
                     if !changed {
