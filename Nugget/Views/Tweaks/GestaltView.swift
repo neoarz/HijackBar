@@ -50,6 +50,10 @@ struct GestaltView: View {
     @State private var alertMGAMessage: String = ""
     @State private var addedKeys: [String: String] = [:]
     
+    @State private var customWidth: String = ""
+    @State private var customHeight: String = ""
+    @State private var isCustomResolutionSet: Bool = false
+
     // list of device subtype options
     @State var deviceSubTypes: [DeviceSubType] = [
         .init(key: -1, title: NSLocalizedString("Default", comment: "default device subtype")),
@@ -150,6 +154,25 @@ struct GestaltView: View {
                 }
             } header: {
                 Label("Gestures & Model Name", systemImage: "platter.filled.top.and.arrow.up.iphone")
+            }
+            // MARK: Resolution Setter
+            Section {
+                TextField("Width", text: $customWidth)
+                TextField("Height", text: $customHeight)
+                Button(action: {
+                    if !customWidth.isEmpty && !customHeight.isEmpty {
+                        if let width = Int(customWidth), let height = Int(customHeight) {
+                            gestaltManager.setGestaltValue(key: "CustomResolution", value: (width, height))
+                            isCustomResolutionSet = true
+                        }
+                    }
+                }) {
+                    if isCustomResolutionSet == true {
+                        Text("Resolution has been set!")
+                    } else {
+                        Text("Set Resolution")
+                    }
+                }
             }
             // tweaks from list
             ForEach($gestaltTweaks) { category in

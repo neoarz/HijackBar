@@ -193,8 +193,20 @@ class MobileGestaltManager {
         return try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
 //        return FileToRestore.init(contents: newData, restorePath: "/var/containers/Shared/SystemGroup/systemgroup.com.apple.mobilegestaltcache/Library/Caches/", restoreName: "com.apple.MobileGestalt.plist")
     }
-    
+    func applyCustomResolution() -> Data? {
+        if let (width, height) = self.GestaltChanges["CustomResolution"] as? (Int, Int) {
+            let plist: [String: Int] = [
+                "canvas_height": height,
+                "canvas_width": width
+            ]
+            return try? PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+        }
+        return nil
+    }
     func applyRdarFix() -> Data? {
+        if let _ = self.GestaltChanges["CustomResolution"] as? (Int, Int) {
+            return nil
+        }
         /* values for rdar fix:
          * 0 = Disable
          * 1 = rdar fix
