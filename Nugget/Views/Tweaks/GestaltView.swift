@@ -46,6 +46,8 @@ struct GestaltView: View {
     
     @State private var customMGAKey: String = ""
     @State private var customMGAValue: String = ""
+    @State private var customWidth: Int = 0
+    @State private var customHeight: Int = 0
     @State private var showMGAAlert: Bool = false
     @State private var alertMGAMessage: String = ""
     @State private var addedKeys: [String: String] = [:]
@@ -130,7 +132,6 @@ struct GestaltView: View {
                         }
                     })
                 }
-                
                 // device model name
                 VStack {
                     Toggle("Device Model Name", isOn: $deviceModelChanged).onChange(of: deviceModelChanged, perform: { nv in
@@ -150,6 +151,49 @@ struct GestaltView: View {
                 }
             } header: {
                 Label("Gestures & Model Name", systemImage: "platter.filled.top.and.arrow.up.iphone")
+            }
+            Section {
+                Toggle("Custom Resolution", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
+                    if !nv {
+                        // Reset the resolution when toggled off
+                        gestaltManager.removeGestaltValue(key: "canvas_width")
+                        gestaltManager.removeGestaltValue(key: "canvas_height")
+                    }
+                })
+                
+                if modifyResolution {
+                    VStack {
+                        HStack {
+                            Text("Width:")
+                            TextField("Enter width", text: Binding(
+                                get: { String(Int(customWidth) ?? 0) },
+                                set: { customWidth = Int($0) ?? 0 }
+                            ))
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                        HStack {
+                            Text("Height:")
+                            TextField("Enter height", text: Binding(
+                                get: { String(Int(customHeight) ?? 0) },
+                                set: { customHeight = Int($0) ?? 0 }
+                            ))
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                        Button("Apply Resolution") {
+                            if customWidth > 0 && customHeight > 0 {
+                                gestaltManager.setGestaltValue(key: "canvas_width", value: customWidth)
+                                gestaltManager.setGestaltValue(key: "canvas_height", value: customHeight)
+                            }
+                        }
+                        .buttonStyle(TintedButton(color: .blue, fullwidth: true))
+                    }
+                }
+            } header: {
+                Label("Custom Resolution Changer", systemImage: "aspectratio")
+            } footer: {
+                Text("Enter custom width and height to modify the resolution. Ensure the values are valid.")
             }
             // tweaks from list
             ForEach($gestaltTweaks) { category in
