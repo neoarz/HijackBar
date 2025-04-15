@@ -1,7 +1,7 @@
-![Artboard](https://github.com/leminlimez/Nugget-Mobile/blob/1881fdc2b721fd2675a2909e7fbc24769d11bb53/readme-images/icon.png)
+![Artboard]()
 
-# Nugget Revamped
-On-device version of [Nugget Mobile](https://github.com/leminlimez/Nugget-Mobile) with some extra improvements. 
+# Tender
+A powerful On-Device SparseRestore app, and a fork of [Nugget Mobile](https://github.com/leminlimez/Nugget-Mobile).
 <p align="left">
   <strong><a href="https://github.com/lunginspector/Nugget-Mobile-Revamped/releases">Download</a></strong>
   •
