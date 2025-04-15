@@ -67,6 +67,9 @@ class ApplyHandler: ObservableObject {
             if let resChangerData: Data = resetting ? Data() : gestaltManager.applyRdarFix() {
                 files.append(FileToRestore(contents: resChangerData, path: FileLocation.resolution.rawValue))
             }
+            if let customResData: Data = resetting ? Data() : gestaltManager.applyCustomResolution() {
+                files.append(FileToRestore(contents: customResData, path: FileLocation.resolution.rawValue))
+            }
         case .FeatureFlags:
             // Apply feature flag changes (iOS 18.0+ only)
             let ffData: Data = resetting ? try ffManager.reset() : try ffManager.apply()

@@ -168,7 +168,7 @@ struct GestaltView: View {
                     }
                 }) {
                     if isCustomResolutionSet == true {
-                        Text("Resolution has been set!")
+                        Text("Resolution has been set! \(String(describing: Int(customWidth))) - \(String(describing: Int(customHeight)))")
                     } else {
                         Text("Set Resolution")
                     }
