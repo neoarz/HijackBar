@@ -411,7 +411,3 @@ struct GestaltView: View {
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true)
     }
 }
-
-#Preview {
-    GestaltView()
-}
