@@ -61,7 +61,6 @@ struct GestaltView: View {
     @State private var CurrentSubTypeDisplay: String = "Default"
     
     @State private var modifyResolution: Bool = false
-    @State private var modifyResolutionFix: Bool = false
     private let resMode: Int = MobileGestaltManager.shared.getRdarFixMode()
     private let resTitle: String = MobileGestaltManager.shared.getRdarFixTitle()
     
@@ -148,7 +147,7 @@ struct GestaltView: View {
                 
                 // rdar fix (change resolution)
                 if resMode > 0 {
-                    Toggle("\(resTitle) (modifies resolution)", isOn: $modifyResolutionFix).onChange(of: modifyResolutionFix, perform: { nv in
+                    Toggle("\(resTitle) (modifies resolution)", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
                         if nv {
                             gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: resMode)
                         } else {
