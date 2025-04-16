@@ -1,12 +1,13 @@
-![Artboard]()
 
 # Tender
-A powerful On-Device SparseRestore app, and a fork of [Nugget Mobile](https://github.com/leminlimez/Nugget-Mobile).
+An On-Device SparseRestore customization toolbox for iOS 16.0 - iOS 18.1.1, and a fork of [Nugget Mobile](https://github.com/leminlimez/Nugget-Mobile).
 <p align="left">
   <strong><a href="https://github.com/lunginspector/Nugget-Mobile-Revamped/releases">Download</a></strong>
   •
   <strong><a href="https://github.com/leminlimez/Nugget-Mobile">Original Project (by leminlimez)</a></strong>
 </p>
+
+![Artboard](https://i.ibb.co/ycftmmtf/tenderbanner.png)
 
 # Support Table
 | iOS Version | Support Status |
@@ -18,10 +19,7 @@ A powerful On-Device SparseRestore app, and a fork of [Nugget Mobile](https://gi
 | iOS 18.1db5 - iOS 18.2db2 | Partially Supported |
 | iOS 18.2db3+ | Not Supported |
 
-Versions marked at "Not Supported" do not work with Nugget Revamped (let alone Nugget Mobile) and **NEVER** will be.
+Versions marked at "Not Supported" do not work with Tender (let alone Nugget Mobile) and **NEVER** will be.
 
 # Additons (from Nugget Mobile)
-* Multiple UI Improvements in various places.
-* Added more context to labels & tweaks.
-* Added multiple new SpringBoard tweaks.
-* Reorganized tweaks within sections for extra clarity.
+* Coming soon
