@@ -34,6 +34,30 @@ struct GestaltView: View {
         var minVersion: Version = Version(string: "16.0")
     }
     
+    struct ResolutionPreset: Identifiable, Hashable, Equatable {
+        let id = UUID()
+        let name: String
+        let width: Int
+        let height: Int
+    }
+         
+    @State private var selectedPreset: ResolutionPreset? = nil
+    @State private var enableCustomResolution: Bool = false
+    @State private var resolutionPresets: [ResolutionPreset] = [
+        ResolutionPreset(name: "iPhone 16 Pro Max", width: 1320, height: 2868),
+        ResolutionPreset(name: "iPhone 16 Pro", width: 1206, height: 2622),
+        ResolutionPreset(name: "iPhone 16", width: 1179, height: 2556),
+        ResolutionPreset(name: "iPhone 15/16 Plus", width: 1290, height: 2796),
+        ResolutionPreset(name: "iPhone 14/15 Pro Max", width: 1290, height: 2796),
+        ResolutionPreset(name: "iPhone 15 & 14/15 Pro", width: 1179, height: 2556),
+        ResolutionPreset(name: "iPhone 14 Plus/13 Pro Max", width: 1284, height: 2778),
+        ResolutionPreset(name: "iPhone 12/12 Pro, 13/13 Pro, & 14", width: 1170, height: 2532),
+        ResolutionPreset(name: "iPhone 12/13 mini", width: 1080, height: 2340),
+        ResolutionPreset(name: "iPhone XS Max/11 Pro Max", width: 1242, height: 2688),
+        ResolutionPreset(name: "iPhone X, XS, & 11 Pro", width: 1125, height: 2436),
+        ResolutionPreset(name: "iPhone XR/11", width: 828, height: 1792)
+    ]
+    
     @State private var CurrentSubType: Int = -1
     @State private var CurrentSubTypeDisplay: String = "Default"
     
@@ -53,6 +77,9 @@ struct GestaltView: View {
     @State private var customWidth: String = ""
     @State private var customHeight: String = ""
     @State private var isCustomResolutionSet: Bool = false
+    @State private var isResolutionChangerEnabled: Bool = false
+    @State private var isCustomResolutionEnabled: Bool = false
+    @State private var setResolutionButtonColor: Color = .blue
 
     // list of device subtype options
     @State var deviceSubTypes: [DeviceSubType] = [
@@ -157,22 +184,60 @@ struct GestaltView: View {
             }
             // MARK: Resolution Setter
             Section {
-                TextField("Width", text: $customWidth)
-                TextField("Height", text: $customHeight)
-                Button(action: {
-                    if !customWidth.isEmpty && !customHeight.isEmpty {
-                        if let width = Int(customWidth), let height = Int(customHeight) {
-                            gestaltManager.setGestaltValue(key: "CustomResolution", value: (width, height))
-                            isCustomResolutionSet = true
+                Toggle("Modify Resolution", isOn: $isResolutionChangerEnabled)
+                
+                if isResolutionChangerEnabled {
+                    Picker("Preset", selection: $selectedPreset) {
+                        ForEach(resolutionPresets) { preset in
+                            Text(preset.name).tag(preset as ResolutionPreset?)
                         }
                     }
-                }) {
-                    if isCustomResolutionSet == true {
-                        Text("Resolution has been set! \(String(describing: Int(customWidth))) - \(String(describing: Int(customHeight)))")
-                    } else {
-                        Text("Set Resolution")
+                    .onChange(of: selectedPreset) { newPreset in
+                        if let preset = newPreset {
+                            customWidth = String(preset.width)
+                            customHeight = String(preset.height)
+                            //gestaltManager.setGestaltValue(key: "CustomResolution", value: (preset.width, preset.height))
+                        }
                     }
+                    
+                    Toggle("Set Custom Resolution", isOn: $isCustomResolutionEnabled)
+                    
+                    if isCustomResolutionEnabled {
+                        TextField("Width", text: $customWidth)
+                        TextField("Height", text: $customHeight)
+                    }
+                    
+                    
+                    Button(action: {
+                        if !customWidth.isEmpty && !customHeight.isEmpty {
+                            if let width = Int(customWidth), let height = Int(customHeight) {
+                                gestaltManager.setGestaltValue(key: "CustomResolution", value: (width, height))
+                                isCustomResolutionSet = true
+                                setResolutionButtonColor = .green
+                            }
+                        }
+                    }) {
+                        if isCustomResolutionSet == true {
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                Text("Resolution Set")
+                            }
+                        } else {
+                            HStack(spacing: 8) {
+                                Image(systemName: "crop")
+                                Text("Set Resolution")
+                            }
+                        }
+                    }
+                    .frame(maxHeight: 45)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .buttonStyle(TintedButton(color: setResolutionButtonColor, fullwidth: true))
+                    .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))
                 }
+            } header: {
+                Label("Resolution Setter", systemImage: "eye.square.fill")
+            } footer: {
+                Text("**WARNING:** Unless you know what you are doing, do not set a custom resolution. It has the ability to brick your device if you do not put in the right values.")
             }
             // tweaks from list
             ForEach($gestaltTweaks) { category in
