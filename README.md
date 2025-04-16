@@ -20,6 +20,3 @@ An On-Device SparseRestore customization toolbox for iOS 16.0 - iOS 18.1.1, and 
 | iOS 18.2db3+ | Not Supported |
 
 Versions marked at "Not Supported" do not work with Tender (let alone Nugget Mobile) and **NEVER** will be.
-
-# Additons (from Nugget Mobile)
-* Coming soon
