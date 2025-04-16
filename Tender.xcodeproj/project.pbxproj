@@ -47,6 +47,8 @@
 		6F8594D42C9A006800F790D1 /* ModifyTweakViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594D32C9A006800F790D1 /* ModifyTweakViewModifier.swift */; };
 		6F8594D92C9C9F6E00F790D1 /* HelperFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8594D82C9C9F6E00F790D1 /* HelperFuncs.swift */; };
 		AA71744B2D7C127C0080ACA8 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA71744A2D7C127C0080ACA8 /* CreditsView.swift */; };
+		AAE3BED22DB055C100C9683F /* lunginspector.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = AAE3BED12DB055C100C9683F /* lunginspector.jpeg */; };
+		AAE3BEF22DB0561500C9683F /* jailbreak.party.png in Resources */ = {isa = PBXBuildFile; fileRef = AAE3BEF12DB0561500C9683F /* jailbreak.party.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +99,8 @@
 		6F8594D32C9A006800F790D1 /* ModifyTweakViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyTweakViewModifier.swift; sourceTree = "<group>"; };
 		6F8594D82C9C9F6E00F790D1 /* HelperFuncs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFuncs.swift; sourceTree = "<group>"; };
 		AA71744A2D7C127C0080ACA8 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
+		AAE3BED12DB055C100C9683F /* lunginspector.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lunginspector.jpeg; sourceTree = "<group>"; };
+		AAE3BEF12DB0561500C9683F /* jailbreak.party.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jailbreak.party.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +153,8 @@
 				6F2A99762C9E0C1000C8A862 /* Files */,
 				6F85935A2C8F41E100F790D1 /* Preview Content */,
 				6F8593B02C8F7B8400F790D1 /* xcode_saver.swift */,
+				AAE3BED12DB055C100C9683F /* lunginspector.jpeg */,
+				AAE3BEF12DB0561500C9683F /* jailbreak.party.png */,
 			);
 			path = Nugget;
 			sourceTree = "<group>";
@@ -344,10 +350,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAE3BED22DB055C100C9683F /* lunginspector.jpeg in Resources */,
 				6F2A997A2C9E18DE00C8A862 /* Config.plist in Resources */,
 				6F2A99782C9E0C1E00C8A862 /* eligibility.plist in Resources */,
 				6F85935C2C8F41E100F790D1 /* Preview Assets.xcassets in Resources */,
 				6F8593592C8F41E100F790D1 /* Assets.xcassets in Resources */,
+				AAE3BEF22DB0561500C9683F /* jailbreak.party.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

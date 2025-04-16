@@ -17,7 +17,7 @@ struct CreditsView: View {
                     HStack {
                         Spacer()
                         VStack {
-                            Text("Nugget Revamped")
+                            Text("Tender")
                                 .font(.system(size: 32, weight: .bold))
                                 .lineLimit(1)
                             Text("Originally built by **leminlimez**, improved\nby **lunginspector**, made for **jailbreak.party.**")

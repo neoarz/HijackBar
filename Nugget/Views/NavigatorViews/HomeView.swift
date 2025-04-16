@@ -96,7 +96,6 @@ struct HomeView: View {
                     .padding()
                 } header: {
                     Label("Tweak Options", systemImage: "hammer.fill")
-                        .padding(.leading, -4)
                 }
                 // MARK: Preferences
                 Section {
@@ -117,7 +116,6 @@ struct HomeView: View {
                     }
                 } header: {
                     Label("Preferences", systemImage: "gearshape.fill")
-                        .padding(.leading, -4)
                 } footer : {
                     Text("**Traditional Skip Setup**: If you use configuration profiles, please turn this off.\n\nSkip Setup will only be applied when restoring **Status Bar** Tweaks.")
                 }
@@ -194,7 +192,7 @@ struct HomeView: View {
                 }
                 startMinimuxer()
             }
-            .navigationTitle("Morsel")
+            .navigationTitle("Tender")
             .navigationDestination(for: String.self) { view in
                 if view == "ApplyChanges" {
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
