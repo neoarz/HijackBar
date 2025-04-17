@@ -124,15 +124,14 @@ struct GestaltView: View {
     var body: some View {
         List {
             Section {
-                // warning
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .padding(.trailing, 6)
-                        .font(.system(size: 25, weight: .regular, design: .default))
+                        .font(.system(.title))
+                        .foregroundStyle(.black)
                     Text("**Warning:** Some of these tweaks may be problematic, including **Internal** and **iPadOS**.")
-                        .font(.system(size: 17))
+                        .foregroundStyle(.black)
                 }
-                .foregroundStyle(.black)
                 .listRowBackground(Color.yellow)
                 .padding(.vertical, 4)
             }

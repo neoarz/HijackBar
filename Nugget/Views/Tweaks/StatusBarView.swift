@@ -97,11 +97,14 @@ struct StatusBarView: View {
             Section {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.yellow)
-                        .font(.system(size: 25))
-                        .padding(.trailing, 8)
-                    Text("If you are using a beta version of iOS, use caution and have a backup.")
+                        .padding(.trailing, 6)
+                        .font(.system(.title))
+                        .foregroundStyle(.black)
+                    Text("**Warning:** If you are using a beta version of iOS, use caution and have a backup.")
+                        .foregroundStyle(.black)
                 }
+                .listRowBackground(Color.yellow)
+                .padding(.vertical, 4)
             }
             Section {
                 Picker(selection: $radioPrimarySelection, label: Text("Network Visibility")) {

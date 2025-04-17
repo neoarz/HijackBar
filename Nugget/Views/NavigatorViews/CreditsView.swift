@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+extension Color {
+    init(hex: String) {
+        var cleanHexCode = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        cleanHexCode = cleanHexCode.replacingOccurrences(of: "#", with: "")
+        print(cleanHexCode)
+        var rgb: UInt64 = 0
+        
+        Scanner(string: cleanHexCode).scanHexInt64(&rgb)
+        
+        let redValue = Double((rgb >> 16) & 0xFF) / 255.0
+        let greenValue = Double((rgb >> 8) & 0xFF) / 255.0
+        let blueValue = Double(rgb & 0xFF) / 255.0
+        self.init(red: redValue, green: greenValue, blue: blueValue)
+    }
+}
+
 struct CreditsView: View {
     private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
 
@@ -15,23 +31,39 @@ struct CreditsView: View {
             List {
                 Section {
                     HStack {
-                        Spacer()
-                        VStack {
+                        Image("tender")
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(.rect(cornerRadius: 12))
+                            .frame(width: 85, height: 85)
+                            .padding(.trailing, 5)
+                        VStack(alignment: .leading) {
                             Text("Tender")
-                                .font(.system(size: 32, weight: .bold))
+                                .font(.system(.title, weight: .bold))
                                 .lineLimit(1)
-                            Text("Originally built by **leminlimez**, improved\nby **lunginspector**, made for **jailbreak.party.**")
-                                .font(.system(size: 15, weight: .regular))
-                                .multilineTextAlignment(.center)
-                                .lineLimit(2)
+                            Text("Originally built by **leminlimez**, improved by **lunginspector**, made for **jailbreak.party.**")
+                                //.font(.system(.body, weight: .bold))
+                                .multilineTextAlignment(.leading)
+                                //.lineLimit(2)
                         }
                         Spacer()
                     }
+                    .padding(.vertical, 10)
+                    .listRowBackground(
+                        LinearGradient(gradient: Gradient(colors: [Color(hex: "#4800FF"), Color(hex: "#FF8400"),]), startPoint: .top, endPoint: .bottom).opacity(0.3)
+                    )
+                    HStack {
+                        Image("jailbreak.party")
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(.rect(cornerRadius: 8))
+                            .frame(width: 32, height: 32)
+                            .padding(.trailing, 6)
+                        Link("jailbreak.party Discord", destination: URL(string: "https://discord.gg/XPj66zZ4gT")!)
+                            .fontWeight(.bold)
+                    }
                 } header: {
-                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "\(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info")
-                }
-                Section {
-                    LinkCell(imageName: "jailbreak.party", url: "https://discord.gg/XPj66zZ4gT", title: "Join the jailbreak.party Discord!", contribution: NSLocalizedString("For support and jailbreak.party news.", comment: "leminlimez's contribution"), circle: true)
+                    Label("Version \(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Int(buildNumber) != 0 ? "\(buildNumber)" : NSLocalizedString("Release", comment:"")))", systemImage: "info.circle.fill")
                 }
                 Section {
                     // app credits
@@ -44,7 +76,7 @@ struct CreditsView: View {
                     LinkCell(imageName: "plus.circle.dashed", url: "https://sidestore.io/", title: "SideStore", contribution: "em_proxy and minimuxer", systemImage: true, circle: true)
                     LinkCell(imageName: "cable.connector", url: "https://libimobiledevice.org", title: "libimobiledevice", contribution: "Restore Library", systemImage: true, circle: true)
                 } header: {
-                    Label("Credits", systemImage: "wrench.and.screwdriver")
+                    Label("Credits", systemImage: "star.fill")
                 }
             }
         }
@@ -74,8 +106,8 @@ struct LinkCell: View {
                     }
                 }
             }
-            .cornerRadius(circle ? .infinity : 0)
-            .frame(width: 24, height: 24)
+            .clipShape(.rect(cornerRadius: 8))
+            .frame(width: 32, height: 32)
             
             VStack {
                 HStack {

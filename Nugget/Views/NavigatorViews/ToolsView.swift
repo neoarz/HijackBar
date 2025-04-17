@@ -45,14 +45,14 @@ struct ToolsView: View {
     var body: some View {
         NavigationView {
             List {
+                // Warning Message
                 Section {
                     HStack {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .padding(.trailing, 6)
-                            .font(.system(size: 24, weight: .regular, design: .default))
+                            .font(.system(.title))
                             .foregroundStyle(.black)
                         Text("**Warning:** If you do not know what an option does, do **not** enable it.")
-                            .font(.system(size: 17))
                             .foregroundStyle(.black)
                     }
                     .listRowBackground(Color.yellow)
