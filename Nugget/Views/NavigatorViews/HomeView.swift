@@ -73,7 +73,6 @@ struct HomeView: View {
                                             Text("Import Pairing File")
                                         }
                                     }
-                                    .frame(maxHeight: 45)
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .buttonStyle(TintedButton(color: .orange, fullwidth: true))
                                     .buttonStyle(TintedButton(material: .systemMaterial, fullwidth: false))

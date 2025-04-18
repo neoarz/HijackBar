@@ -152,7 +152,7 @@ struct GestaltView: View {
                 
                 // rdar fix (change resolution)
                 if resMode > 0 {
-                    Toggle("\(resTitle) (modifies resolution)", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
+                    Toggle("\(resTitle) (Changes Resolution)", isOn: $modifyResolution).onChange(of: modifyResolution, perform: { nv in
                         if nv {
                             gestaltManager.setGestaltValue(key: "IOMobileGraphicsFamily", value: resMode)
                         } else {
@@ -376,7 +376,7 @@ struct GestaltView: View {
         
         for type in deviceSubTypes {
             if userVersion >= type.minVersion {
-                let newAction = UIAlertAction(title: type.title + " (" + String(type.key) + ")", style: .default) { (action) in
+                let newAction = UIAlertAction(title: type.title, style: .default) { (action) in
                     // apply the type
                     gestaltManager.setGestaltValue(key: "ArtworkDeviceSubType", value: type.key)
                     CurrentSubType = type.key

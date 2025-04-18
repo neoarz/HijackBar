@@ -32,7 +32,7 @@ struct InternalOptionsView: View {
                 }
             }
         }
-        .navigationTitle("Internal Options")
+        .navigationTitle("Internal")
         .tweakToggle(for: .Internal)
     }
 }
