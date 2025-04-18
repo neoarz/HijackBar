@@ -34,7 +34,7 @@ struct CreditsView: View {
                         Image("tender")
                             .resizable()
                             .scaledToFit()
-                            .clipShape(.rect(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                             .frame(width: 85, height: 85)
                             .padding(.trailing, 5)
                         VStack(alignment: .leading) {
@@ -56,7 +56,7 @@ struct CreditsView: View {
                         Image("jailbreak.party")
                             .resizable()
                             .scaledToFit()
-                            .clipShape(.rect(cornerRadius: 8))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 32, height: 32)
                             .padding(.trailing, 6)
                         Link("jailbreak.party Discord", destination: URL(string: "https://discord.gg/XPj66zZ4gT")!)
@@ -106,7 +106,7 @@ struct LinkCell: View {
                     }
                 }
             }
-            .clipShape(.rect(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .frame(width: 32, height: 32)
             
             VStack {
