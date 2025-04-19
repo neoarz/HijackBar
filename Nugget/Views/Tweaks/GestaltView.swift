@@ -186,17 +186,21 @@ struct GestaltView: View {
                 Toggle("Modify Resolution", isOn: $isResolutionChangerEnabled)
                 
                 if isResolutionChangerEnabled {
-                    Picker("Preset", selection: $selectedPreset) {
-                        ForEach(resolutionPresets) { preset in
-                            Text(preset.name).tag(preset as ResolutionPreset?)
+                    if UIDevice.current.userInterfaceIdiom != .pad {
+                        Picker("Preset", selection: $selectedPreset) {
+                            ForEach(resolutionPresets) { preset in
+                                Text(preset.name).tag(preset as ResolutionPreset?)
+                            }
                         }
-                    }
-                    .onChange(of: selectedPreset) { newPreset in
-                        if let preset = newPreset {
-                            customWidth = String(preset.width)
-                            customHeight = String(preset.height)
-                            //gestaltManager.setGestaltValue(key: "CustomResolution", value: (preset.width, preset.height))
+                        .onChange(of: selectedPreset) { newPreset in
+                            if let preset = newPreset {
+                                customWidth = String(preset.width)
+                                customHeight = String(preset.height)
+                                //gestaltManager.setGestaltValue(key: "CustomResolution", value: (preset.width, preset.height))
+                            }
                         }
+                    } else {
+                        // Nothing will be shown
                     }
                     
                     Toggle("Set Custom Resolution", isOn: $isCustomResolutionEnabled)
@@ -236,7 +240,11 @@ struct GestaltView: View {
             } header: {
                 Label("Resolution Setter", systemImage: "eye.square.fill")
             } footer: {
-                Text("**WARNING:** Unless you know what you are doing, do not set a custom resolution. It has the ability to brick your device if you do not put in the right values.")
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    Text("**WARNING:** Unless you know **exactly** what you are doing, don't set a custom resolution. This can easily break on iPads and it will make the device impossible to interact with.")
+                } else {
+                    Text("**WARNING:** Unless you know what you are doing, do not set a custom resolution. It has the ability to brick your device if you do not put in the right values.")
+                }
             }
             // tweaks from list
             ForEach($gestaltTweaks) { category in

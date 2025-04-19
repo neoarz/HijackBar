@@ -17,7 +17,7 @@ struct LogView: View {
     @State var log: String = ""
     @State var ran = false
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollViewReader { proxy in
                 ScrollView {
                     Text(log)

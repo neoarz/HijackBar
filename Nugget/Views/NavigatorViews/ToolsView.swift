@@ -43,7 +43,7 @@ struct ToolsView: View {
     let userVersion = Version(string: UIDevice.current.systemVersion)
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 // Warning Message
                 Section {
