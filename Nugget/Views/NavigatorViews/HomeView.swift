@@ -10,7 +10,12 @@ import UniformTypeIdentifiers
 
 struct HomeView: View {
     private let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
-
+    
+    enum HomeDestination: Hashable, Decodable {
+        case applyChanges
+        case revertChanges
+    }
+    
     @State var showRevertPage = false
     @State var showPairingFileImporter = false
     @State var showErrorAlert = false
@@ -192,10 +197,11 @@ struct HomeView: View {
                 startMinimuxer()
             }
             .navigationTitle("Tender")
-            .navigationDestination(for: String.self) { view in
-                if view == "ApplyChanges" {
+            .navigationDestination(for: HomeDestination.self) { destination in
+                switch destination {
+                case .applyChanges:
                     LogView(resetting: false, autoReboot: autoReboot, skipSetup: skipSetup)
-                } else if view == "RevertChanges" {
+                case .revertChanges:
                     LogView(resetting: true, autoReboot: autoReboot, skipSetup: skipSetup)
                 }
             }
@@ -220,11 +226,11 @@ struct HomeView: View {
                 // if there are no enabled tweaks then tell the user
                 UIApplication.shared.alert(body: "You do not have any tweaks enabled. Go to the tweaks page to select some.")
             } else if ApplyHandler.shared.isExploitOnly() {
-                path.append(reverting ? "RevertChanges" : "ApplyChanges")
+                path.append(reverting ? HomeDestination.revertChanges : HomeDestination.applyChanges)
             } else if !ApplyHandler.shared.trollstore {
                 // if applying non-exploit files, warn about setup
                 UIApplication.shared.confirmAlert(title: "Warning!", body: "You are applying non-exploit related files. This will make the setup screen appear. Click Cancel if you do not wish to proceed.\n\nWhen setting up, you MUST click \"Do not transfer apps & data\".\n\nIf you see a screen that says \"iPhone Partially Set Up\", DO NOT tap the big blue button. You must click \"Continue with Partial Setup\".", onOK: {
-                    path.append(reverting ? "RevertChanges" : "ApplyChanges")
+                    path.append(reverting ? HomeDestination.revertChanges : HomeDestination.applyChanges)
                 }, noCancel: false)
             }
         } else if pairingFile == nil {
