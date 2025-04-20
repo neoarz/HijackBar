@@ -163,7 +163,7 @@ struct GestaltView: View {
                 
                 // device model name
                 VStack {
-                    Toggle("Device Model Name", isOn: $deviceModelChanged).onChange(of: deviceModelChanged, perform: { nv in
+                    Toggle("Rename Device", isOn: $deviceModelChanged).onChange(of: deviceModelChanged, perform: { nv in
                         if nv {
                             if deviceModelName != "" {
                                 gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
@@ -172,11 +172,14 @@ struct GestaltView: View {
                             gestaltManager.removeGestaltValue(key: "ArtworkDeviceProductDescription")
                         }
                     })
-                    TextField("Custom Text", text: $deviceModelName).onChange(of: deviceModelName, perform: { nv in
-                        if deviceModelChanged {
-                            gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
-                        }
-                    })
+                    
+                    if deviceModelChanged {
+                        TextField("New Device Name", text: $deviceModelName).onChange(of: deviceModelName, perform: { nv in
+                            if deviceModelChanged {
+                                gestaltManager.setGestaltValue(key: "ArtworkDeviceProductDescription", value: deviceModelName)
+                            }
+                        })
+                    }
                 }
             } header: {
                 Label("Gestures & Model Name", systemImage: "platter.filled.top.and.arrow.up.iphone")

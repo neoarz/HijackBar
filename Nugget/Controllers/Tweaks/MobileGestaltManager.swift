@@ -147,7 +147,7 @@ class MobileGestaltManager {
         switch UIDevice().type {
         case .iPhoneXR, .iPhoneXS, .iPhone11, .iPhone11Pro:
             return 1
-        case .iPhone12, .iPhone12Pro, .iPhone13, .iPhone13Pro, .iPhone14:
+        case .iPhone12Mini, .iPhone12, .iPhone12Pro, .iPhone13Mini, .iPhone13, .iPhone13Pro, .iPhone14:
             return 2
         case .iPhoneSE, .iPhoneSE2, .iPhoneSE3:
             return 3
@@ -159,7 +159,7 @@ class MobileGestaltManager {
         if mode == 1 || mode == 3 {
             return "Fix rdar"
         } else if mode == 2 {
-            return "DI status bar fix"
+            return "Fix Status Bar"
         }
         return "hide"
     }
