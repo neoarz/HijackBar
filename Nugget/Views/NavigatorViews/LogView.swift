@@ -95,6 +95,8 @@ struct LogView: View {
                 Spacer()
             }
         }
+        .navigationViewStyle(.stack)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationTitle("Application Logs")
     }
     

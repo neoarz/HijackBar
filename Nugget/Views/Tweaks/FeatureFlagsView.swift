@@ -64,9 +64,6 @@ struct FeatureFlagsView: View {
                     }
                 }
             }
-            .tweakToggle(for: .FeatureFlags)
-            .navigationTitle("Feature Flags")
-            .navigationViewStyle(.stack)
             .onAppear {
                 // get the enabled feature flags
                 // O(n^2), should be improved
@@ -83,5 +80,9 @@ struct FeatureFlagsView: View {
                 }
             }
         }
+        // Move the modifers here please
+        .tweakToggle(for: .FeatureFlags)
+        .navigationTitle("Feature Flags")
+        .navigationViewStyle(.stack)
     }
 }
