@@ -75,7 +75,3 @@ struct RootView: View {
         .edgesIgnoringSafeArea(.bottom)
     }
 }
-
-#Preview {
-    RootView()
-}
