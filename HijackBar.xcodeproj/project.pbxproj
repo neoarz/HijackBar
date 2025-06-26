@@ -126,7 +126,7 @@
 		6F8593482C8F41E000F790D1 = {
 			isa = PBXGroup;
 			children = (
-				6F8593532C8F41E000F790D1 /* Nugget */,
+				6F8593532C8F41E000F790D1 /* HijackBar */,
 				6F8593522C8F41E000F790D1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -139,7 +139,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6F8593532C8F41E000F790D1 /* Nugget */ = {
+		6F8593532C8F41E000F790D1 /* HijackBar */ = {
 			isa = PBXGroup;
 			children = (
 				6F8594BC2C9490BA00F790D1 /* Info.plist */,
@@ -156,7 +156,7 @@
 				AAE3BED12DB055C100C9683F /* lunginspector.jpeg */,
 				AAE3BEF12DB0561500C9683F /* jailbreak.party.png */,
 			);
-			path = Nugget;
+			path = HijackBar;
 			sourceTree = "<group>";
 		};
 		6F85935A2C8F41E100F790D1 /* Preview Content */ = {
@@ -325,7 +325,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6F85934C2C8F41E000F790D1 /* Build configuration list for PBXProject "Tender" */;
+			buildConfigurationList = 6F85934C2C8F41E000F790D1 /* Build configuration list for PBXProject "HijackBar" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -599,7 +599,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F85934C2C8F41E000F790D1 /* Build configuration list for PBXProject "Tender" */ = {
+		6F85934C2C8F41E000F790D1 /* Build configuration list for PBXProject "HijackBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F85935D2C8F41E100F790D1 /* Debug */,
