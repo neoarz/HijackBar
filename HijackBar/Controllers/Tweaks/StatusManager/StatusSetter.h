@@ -1,6 +1,6 @@
 #pragma once
 #import <Foundation/Foundation.h>
-#import "Nugget-Swift.h"
+#import "HijackBar-Swift.h"
 
 @protocol StatusSetter <NSObject>
 - (bool) isCarrierOverridden;

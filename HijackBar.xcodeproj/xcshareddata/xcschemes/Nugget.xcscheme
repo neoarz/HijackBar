@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6F8593502C8F41E000F790D1"
-               BuildableName = "Nugget.app"
-               BlueprintName = "Nugget"
+               BuildableName = "HijackBar.app"
+               BlueprintName = "HijackBar"
                ReferencedContainer = "container:HijackBar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6F8593502C8F41E000F790D1"
-            BuildableName = "Nugget.app"
-            BlueprintName = "Nugget"
+            BuildableName = "HijackBar.app"
+            BlueprintName = "HijackBar"
             ReferencedContainer = "container:HijackBar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6F8593502C8F41E000F790D1"
-            BuildableName = "Nugget.app"
-            BlueprintName = "Nugget"
+            BuildableName = "HijackBar.app"
+            BlueprintName = "HijackBar"
             ReferencedContainer = "container:HijackBar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
