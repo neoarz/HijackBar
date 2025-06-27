@@ -9,31 +9,35 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout your repo
+      - name: Checkout your repository
         uses: actions/checkout@v3
+        with:
+          submodules: false
 
-      - name: Setup Theos with Swift support (Orion)
+      - name: Setup Theos + Swift (Orion)
         uses: Randomblock1/theos-action@v1
         with:
           theos-dir: theos
           theos-src: https://github.com/theos/theos
           theos-sdks: https://github.com/theos/sdks
+          theos-sdks-branch: master
           orion: true
 
-      - name: Install additional build tools
+      - name: Install additional tools
         uses: dhinakg/procursus-action@main
         with:
           packages: coreutils make xz ldid
 
       - name: Build IPA
         run: |
+          export THEOS=theos
           git submodule update --init
           bash get_libraries.sh
           bash ipabuild.sh
 
-      - name: Upload IPA artifact
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: hijackbar-artifact
+          name: hijackbar
           path: build/*.ipa
           
