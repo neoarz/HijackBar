@@ -3,6 +3,14 @@ set -e
 
 cd lib
 
+# Download precompiled Rust libraries (these should be fine)
+wget -nc https://github.com/SideStore/EMPackage/raw/main/RustXcframework.xcframework/ios-arm64/libem_proxy-ios.a
+wget -nc https://github.com/SideStore/MinimuxerPackage/raw/main/RustXcframework.xcframework/ios-arm64/libminimuxer-ios.a
+
+# For the C libraries, we'll use the precompiled ones but they should be compatible
+# The SDK version warnings are just warnings and shouldn't cause build failures
+mkdir tmp && cd tmp
+
 extract_deb() {
   wget -nc $1 -O tmp.deb
   ar -x tmp.deb
@@ -10,11 +18,6 @@ extract_deb() {
   tar --zstd -xvf data.tar.zst
   mv usr/lib/*.a ..
 }
-
-wget -nc https://github.com/SideStore/EMPackage/raw/main/RustXcframework.xcframework/ios-arm64/libem_proxy-ios.a
-wget -nc https://github.com/SideStore/MinimuxerPackage/raw/main/RustXcframework.xcframework/ios-arm64/libminimuxer-ios.a
-
-mkdir tmp && cd tmp
 
 extract_deb https://apt.procurs.us/pool/main/iphoneos-arm64/1700/libimobiledevice/libimobiledevice-dev_1.3.0+git20220702.2eec1b9-1_iphoneos-arm.deb
 extract_deb https://apt.procurs.us/pool/main/iphoneos-arm64/1700/libimobiledevice-glue/libimobiledevice-glue-dev_1.0.0+git20220522.d2ff796_iphoneos-arm.deb

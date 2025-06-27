@@ -46,8 +46,13 @@ jobs:
           export THEOS_DEVICE_PORT=22
 
           git submodule update --init
+          
+          # Clean existing libraries to force rebuild
+          rm -rf lib/*.a
           bash get_libraries.sh
-          bash ipabuild.sh
+          
+          # Build with verbose output to debug Swift compilation
+          bash ipabuild.sh --debug
 
       - name: Upload artifact
         uses: actions/upload-artifact@main
