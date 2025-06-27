@@ -77,7 +77,7 @@ $(APPLICATION_NAME)_FILES += $(wildcard $(UI_EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(TWEAK_CONTROLLERS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(CONTROLLERS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(STATUS_MANAGER_DIR)/*.m)
-$(APPLICATION_NAME)_FILES += $(SRC_DIR)/HijackBarApp.swift
+$(APPLICATION_NAME)_FILES += $(SRC_DIR)/NuggetApp.swift
 
 $(APPLICATION_NAME)_FRAMEWORKS = UIKit
 $(APPLICATION_NAME)_CFLAGS = -fcommon -fobjc-arc
