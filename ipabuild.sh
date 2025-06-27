@@ -3,7 +3,7 @@ if [[ $* == *--scriptdebug* ]]; then
 fi
 set -e
 
-APP_NAME="Nugget"
+APP_NAME="HijackBar"
 FILE_EXT="ipa"
 WORKING_LOCATION="$(pwd)"
 APP_BUILD_FILES="$WORKING_LOCATION/layout/Applications/$APP_NAME.app"
