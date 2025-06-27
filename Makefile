@@ -4,7 +4,7 @@ TARGET := iphone:clang:16.5:16.0
 
 include $(THEOS)/makefiles/common.mk
 
-APPLICATION_NAME = Nugget
+APPLICATION_NAME = HijackBar
 LIBRARY_NAME = libEMProxy libimobiledevice
 
 # Link em_proxy separately as it has duplicated symbols with minimuxer
@@ -29,7 +29,7 @@ libimobiledevice_LDFLAGS = \
 libimobiledevice_FRAMEWORKS = Foundation Security SystemConfiguration
 libimobiledevice_INSTALL_PATH = /Applications/$(APPLICATION_NAME).app/Frameworks
 
-SRC_DIR := Nugget
+SRC_DIR := HijackBar
 # Directories
 SPARSERESTORE_DIR := $(SRC_DIR)/Sparserestore
 
@@ -77,7 +77,7 @@ $(APPLICATION_NAME)_FILES += $(wildcard $(UI_EXT_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(TWEAK_CONTROLLERS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(CONTROLLERS_DIR)/*.swift)
 $(APPLICATION_NAME)_FILES += $(wildcard $(STATUS_MANAGER_DIR)/*.m)
-$(APPLICATION_NAME)_FILES += $(SRC_DIR)/NuggetApp.swift
+$(APPLICATION_NAME)_FILES += $(SRC_DIR)/HijackBarApp.swift
 
 $(APPLICATION_NAME)_FRAMEWORKS = UIKit
 $(APPLICATION_NAME)_CFLAGS = -fcommon -fobjc-arc
