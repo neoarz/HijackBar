@@ -26,7 +26,6 @@ jobs:
         with:
           repository: theos/sdks
           ref: master
-          nugget-checkout: iPhoneOS16.5.sdk
           path: theos/sdks
 
       - name: Ensure main utils are installed
@@ -34,9 +33,17 @@ jobs:
         with:
           packages: coreutils make xz ldid
           
+      - name: Setup iOS SDK
+        run: |
+          # Create symlink for the iOS 16.5 SDK
+          sudo mkdir -p /opt/theos/sdks
+          sudo ln -sf $PWD/theos/sdks/iPhoneOS16.5.sdk /opt/theos/sdks/iPhoneOS16.5.sdk
+          
       - name: Build
         run: |
           export THEOS=theos
+          export THEOS_DEVICE_IP=127.0.0.1
+          export THEOS_DEVICE_PORT=22
 
           git submodule update --init
           bash get_libraries.sh
