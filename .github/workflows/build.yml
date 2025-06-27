@@ -32,7 +32,7 @@ jobs:
           bash ipabuild.sh
 
       - name: Upload IPA artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: hijackbar-artifact
           path: build/*.ipa
