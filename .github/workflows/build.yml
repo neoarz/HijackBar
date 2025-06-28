@@ -35,26 +35,39 @@ jobs:
           
       - name: Setup iOS SDK
         run: |
-          # Create symlink for the iOS 16.2 SDK (matches libplist version)
+          echo "=== SDK Setup ==="
+          echo "Current directory: $(pwd)"
+          echo "Available SDKs:"
+          ls -la theos/sdks/
+          
+          # Use iOS 16.5 SDK (should exist)
           sudo mkdir -p /opt/theos/sdks
-          sudo ln -sf $PWD/theos/sdks/iPhoneOS16.2.sdk /opt/theos/sdks/iPhoneOS16.2.sdk
+          sudo ln -sf $PWD/theos/sdks/iPhoneOS16.5.sdk /opt/theos/sdks/iPhoneOS16.5.sdk
+          echo "SDK symlink created:"
+          ls -la /opt/theos/sdks/
           
       - name: Build
         run: |
+          echo "=== Build Setup ==="
           export THEOS=theos
           export THEOS_DEVICE_IP=127.0.0.1
           export THEOS_DEVICE_PORT=22
 
+          echo "THEOS: $THEOS"
+          echo "Current directory: $(pwd)"
+          
           git submodule update --init
           
+          echo "=== Library Setup ==="
           # Clean existing libraries to force rebuild
           rm -rf lib/*.a
           bash get_libraries.sh
           
-          # Show environment for debugging
+          echo "=== Build Environment ==="
           echo "THEOS: $THEOS"
           echo "SDK path: $(ls -la /opt/theos/sdks/)"
           
+          echo "=== Starting Build ==="
           # Build with verbose output to debug Swift compilation
           bash ipabuild.sh --debug
 
