@@ -67,9 +67,15 @@ jobs:
           echo "THEOS: $THEOS"
           echo "SDK path: $(ls -la /opt/theos/sdks/)"
           
-          echo "=== Starting Build ==="
-          # Build with verbose output to debug Swift compilation
-          bash ipabuild.sh --debug
+          # Try building without debug first
+          echo "=== Starting Build (Release Mode) ==="
+          bash ipabuild.sh
+          
+          # If that fails, try debug mode
+          if [ $? -ne 0 ]; then
+            echo "=== Release build failed, trying debug mode ==="
+            bash ipabuild.sh --debug
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@main
